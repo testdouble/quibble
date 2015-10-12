@@ -2,13 +2,24 @@
   "name": "quibble",
   "version": "0.0.1",
   "description": "Wraps global.require to enable ergonomic module stubbing",
+  "config": {
+    "mocha_reporter": "spec"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "testem",
+    "test": "mocha -u mocha-gwt -R $npm_package_config_mocha_reporter --compilers coffee:coffee-script --recursive test/helper.coffee test/lib/",
+    "test:debug": "npm test -- --debug-brk"
   },
   "author": "Justin Searls <searls@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "coffee-script": "^1.10.0",
     "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3",
+    "mocha-gwt": "^0.2.1",
+    "testem": "^0.9.7"
   }
 }
