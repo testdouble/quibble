@@ -1,23 +1,25 @@
 _ = require('lodash')
+lolModule = require('module')
+originalRequire = lolModule.prototype.require
+config = null
 
-originalRequire = global.require
 quibbles = {}
 NO_ARG_TOKEN = {}
 
 module.exports = quibble = (path, fake) ->
-  global.require = fakeRequire
+  lolModule.prototype.require = fakeRequire
   quibbles[path] = if arguments.length < 2 then NO_ARG_TOKEN else fake
 
-module.exports.configure = (userConfig) ->
+quibble.config = (userConfig) ->
   config = _.extend {},
     defaultFakeCreator: (path) -> {}
   , userConfig
-config = quibble.configure()
+config = quibble.config()
 
 module.exports.reset = ->
-  global.require = originalRequire
+  lolModule.prototype.require = originalRequire
   quibbles = {}
-  config = quibble.configure()
+  config = quibble.config()
 
 fakeRequire = (path) ->
   if quibbles.hasOwnProperty(path)
