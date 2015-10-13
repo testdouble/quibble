@@ -4,5 +4,3 @@ describe 'something that wraps quibble', ->
   When -> @result = require('./should-be-relative-to-test-slash-lib')
   Then -> @result == 'neat'
 
-  afterEach ->
-    require('../../lib/quibble').reset(true)

@@ -33,7 +33,7 @@ config = quibble.config()
 #
 # Wow, this is really silly.
 quibble.ignoreCallsFromThisFile = (file = hackErrorStackToGetCallerFile(false)) ->
-  ignoredCallerFiles.push(file)
+  ignoredCallerFiles = _.uniq(ignoredCallerFiles.concat(file))
 
 quibble.reset = (hard = false) ->
   Module._load = originalLoad
@@ -60,10 +60,9 @@ hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   Error.prepareStackTrace = (e, stack) -> stack
   e = new Error()
   currentFile = e.stack[0].getFileName()
-  callerFile = _(e.stack).
-    map((s) -> s.getFileName()).
+  callerFile = _(e.stack).invoke('getFileName').
     reject((f) -> includeGlobalIgnores && _.include(ignoredCallerFiles, f)).
-    select((f) -> _.startsWith(f, '/')).
+    select(path.isAbsolute).
     find((f) -> f != currentFile)
   Error.prepareStackTrace = originalFunc
   callerFile
