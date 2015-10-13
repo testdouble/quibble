@@ -2,7 +2,6 @@ originalLoad = require('module')._load
 quibble = require('../../lib/quibble')
 
 describe 'quibble', ->
-
   describe 'basic behavior', ->
     Given -> @stubbing = quibble('./../fixtures/a-function', -> "kek")
     Then -> @stubbing() == "kek"
@@ -30,8 +29,6 @@ describe 'quibble', ->
       When -> quibble('./some-other-thing')
       Then -> require('../fixtures/a-function')() == "ha"
 
-
-  afterEach -> quibble.reset()
 
 describe 'quibble.reset', ->
   describe 'restores original require', ->
