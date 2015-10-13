@@ -25,7 +25,9 @@ describe('pants', function(){
 ```
 
 That way, when the `subject` loaded from `lib/pants` runs `require('./legs')`,
-it will get back the function that returns 'ooh, legs'.
+it will get back the function that returns 'ooh, legs'. The fake value is also
+returned by `quibble`, which makes it easy to set and assign a test double in a
+one-liner.
 
 ## Configuration
 
