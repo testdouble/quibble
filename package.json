@@ -4,12 +4,14 @@
   "description": "Makes it easy to replace require'd dependencies.",
   "homepage": "https://github.com/testdouble/quibble",
   "config": {
-    "mocha_reporter": "spec"
+    "mocha_reporter": "dot"
   },
   "scripts": {
     "start": "testem",
     "test": "mocha -u mocha-given -R $npm_package_config_mocha_reporter --compilers coffee:coffee-script --recursive test/helper.coffee test/lib/",
-    "test:debug": "npm test -- --debug-brk"
+    "test:debug": "npm test -- --debug-brk",
+    "preversion": "git pull --rebase && npm test",
+    "postversion": "git push && git push --tags && npm publish"
   },
   "author": {
     "name": "Justin Searls",
