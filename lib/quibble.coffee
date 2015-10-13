@@ -7,8 +7,9 @@ config = null
 quibbles = {}
 
 module.exports = quibble = (request, fake) ->
+  request = absolutify(request)
   Module._load = fakeLoad
-  quibbles[absolutify(request)] = if arguments.length < 2
+  quibbles[request] = if arguments.length < 2
     config.defaultFakeCreator(request)
   else
     fake
