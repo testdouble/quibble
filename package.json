@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "testem",
-    "test": "mocha -u mocha-gwt -R $npm_package_config_mocha_reporter --compilers coffee:coffee-script --recursive test/helper.coffee test/lib/",
+    "test": "mocha -u mocha-given -R $npm_package_config_mocha_reporter --compilers coffee:coffee-script --recursive test/helper.coffee test/lib/",
     "test:debug": "npm test -- --debug-brk"
   },
   "author": "Justin Searls <searls@gmail.com>",
@@ -19,7 +19,7 @@
   "devDependencies": {
     "chai": "^3.3.0",
     "mocha": "^2.3.3",
-    "mocha-gwt": "^0.2.1",
+    "mocha-given": "^0.1.3",
     "testem": "^0.9.7"
   }
 }

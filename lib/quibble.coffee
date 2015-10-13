@@ -1,13 +1,14 @@
 _ = require('lodash')
-lolModule = require('module')
-originalRequire = lolModule.prototype.require
+Module = require('module')
+originalLoad = Module._load
 config = null
 
 quibbles = {}
 NO_ARG_TOKEN = {}
 
 module.exports = quibble = (path, fake) ->
-  lolModule.prototype.require = fakeRequire
+  # resolve absolute path of `path` based on filename of caller
+  Module._load = fakeLoad
   quibbles[path] = if arguments.length < 2 then NO_ARG_TOKEN else fake
 
 quibble.config = (userConfig) ->
@@ -17,16 +18,19 @@ quibble.config = (userConfig) ->
 config = quibble.config()
 
 module.exports.reset = ->
-  lolModule.prototype.require = originalRequire
+  Module._load = originalLoad
   quibbles = {}
   config = quibble.config()
 
-fakeRequire = (path) ->
-  if quibbles.hasOwnProperty(path)
-    if quibbles[path] == NO_ARG_TOKEN
-      config.defaultFakeCreator(path)
+fakeLoad = (request, parent, isMain) ->
+  if quibbles.hasOwnProperty(request)
+    if quibbles[request] == NO_ARG_TOKEN
+      config.defaultFakeCreator(request)
     else
-      quibbles[path]
+      quibbles[request]
   else
-    originalRequire(arguments...)
+    filename = Module._resolveFilename(request, parent)
+    cachedModule = Module._cache[filename]
+    console.log "WAT", cachedModule
+    originalLoad(request, parent, isMain)
 
