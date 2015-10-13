@@ -26,17 +26,17 @@ module.exports.reset = ->
   config = quibble.config()
 
 fakeLoad = (request, parent, isMain) ->
-  request = absolutify(request)
+  request = absolutify(request, parent.filename)
   if quibbles.hasOwnProperty(request)
     quibbles[request]
   else
     originalLoad(request, parent, isMain)
 
-absolutify = (relativePath) ->
+absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFile()) ->
   return relativePath if _.startsWith(relativePath, '/') || /^\w/.test(relativePath)
-  path.resolve(path.dirname(_getCallerFile()), relativePath)
+  path.resolve(path.dirname(parentFileName), relativePath)
 
-_getCallerFile = ->
+hackErrorStackToGetCallerFile = ->
   originalFunc = Error.prepareStackTrace
   Error.prepareStackTrace = (e, stack) -> stack
   e = new Error()
