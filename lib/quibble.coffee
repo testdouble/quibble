@@ -5,11 +5,13 @@ originalLoad = Module._load
 config = null
 
 quibbles = {}
-NO_ARG_TOKEN = {}
 
 module.exports = quibble = (request, fake) ->
   Module._load = fakeLoad
-  quibbles[absolutify(request)] = if arguments.length < 2 then NO_ARG_TOKEN else fake
+  quibbles[absolutify(request)] = if arguments.length < 2
+    config.defaultFakeCreator(request)
+  else
+    fake
 
 quibble.config = (userConfig) ->
   config = _.extend {},
@@ -25,10 +27,7 @@ module.exports.reset = ->
 fakeLoad = (request, parent, isMain) ->
   request = absolutify(request)
   if quibbles.hasOwnProperty(request)
-    if quibbles[request] == NO_ARG_TOKEN
-      config.defaultFakeCreator(request)
-    else
-      quibbles[request]
+    quibbles[request]
   else
     originalLoad(request, parent, isMain)
 

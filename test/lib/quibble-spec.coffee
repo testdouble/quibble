@@ -4,7 +4,8 @@ quibble = require('../../lib/quibble')
 describe 'quibble', ->
 
   describe 'basic behavior', ->
-    Given -> quibble('./../fixtures/a-function', -> "kek")
+    Given -> @stubbing = quibble('./../fixtures/a-function', -> "kek")
+    Then -> @stubbing() == "kek"
     Then -> require('./../fixtures/a-function')() == "kek"
     Then -> require('../fixtures/a-function')() == "kek"
     Then -> require('../../test/fixtures/a-function')() == "kek"
@@ -13,7 +14,8 @@ describe 'quibble', ->
   describe '.config', ->
     describe 'defaultFakeCreator', ->
       Given -> quibble.config(defaultFakeCreator: -> 'lol')
-      When -> quibble('./lol')
+      When -> @stubbing = quibble('./lol')
+      Then -> @stubbing == 'lol'
       Then -> require('./../../test/lib/lol') == 'lol'
 
   describe '.reset', ->
