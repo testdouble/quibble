@@ -7,13 +7,14 @@ describe 'quibble', ->
     Given -> quibble('./../fixtures/a-function', -> "kek")
     Then -> require('./../fixtures/a-function')() == "kek"
     Then -> require('../fixtures/a-function')() == "kek"
+    Then -> require('../../test/fixtures/a-function')() == "kek"
     Then -> require('./../fixtures/b-function')() == "b function"
 
   describe '.config', ->
     describe 'defaultFakeCreator', ->
       Given -> quibble.config(defaultFakeCreator: -> 'lol')
       When -> quibble('./lol')
-      Then -> require('./lol') == 'lol'
+      Then -> require('./../../test/lib/lol') == 'lol'
 
   describe '.reset', ->
     context 'ensure it clears its internal data structure of quibbles', ->
