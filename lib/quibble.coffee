@@ -7,6 +7,7 @@ quibbles = {}
 NO_ARG_TOKEN = {}
 
 module.exports = quibble = (path, fake) ->
+  console.log("HEYYYY #{_getCallerFile()}")
   # resolve absolute path of `path` based on filename of caller
   Module._load = fakeLoad
   quibbles[path] = if arguments.length < 2 then NO_ARG_TOKEN else fake
@@ -34,3 +35,11 @@ fakeLoad = (request, parent, isMain) ->
     console.log "WAT", cachedModule
     originalLoad(request, parent, isMain)
 
+_getCallerFile = ->
+  originalFunc = Error.prepareStackTrace
+  Error.prepareStackTrace = (e, stack) -> stack
+  e = new Error()
+  currentFile = e.stack[0].getFileName()
+  callerFile = _.find(e.stack, (line) -> line.getFileName() != currentFile).getFileName()
+  Error.prepareStackTrace = originalFunc
+  callerFile
