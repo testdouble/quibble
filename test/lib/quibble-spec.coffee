@@ -4,7 +4,6 @@ quibble = require('../../lib/quibble')
 describe 'quibble', ->
 
   describe 'basic behavior', ->
-    Given -> quibble('./lib')
     Given -> quibble('./../fixtures/a-function', -> "kek")
     Then -> require('./../fixtures/a-function')() == "kek"
     Then -> require('../fixtures/a-function')() == "kek"
