@@ -1,10 +1,11 @@
 _ = require('lodash')
 Module = require('module')
 path = require('path')
+
 originalLoad = Module._load
 config = null
-
 quibbles = {}
+ignoredCallerFiles = []
 
 module.exports = quibble = (request, fake) ->
   request = absolutify(request)
@@ -20,10 +21,28 @@ quibble.config = (userConfig) ->
   , userConfig
 config = quibble.config()
 
-module.exports.reset = ->
+# This method is a bit confusing. Call it from any spec-helper or intermediary
+# library which may be calling on behalf of the test itself. Otherwise, the
+# quibble stacktrace hack will determine that all the quibble calls are to
+# be set up relative to that helper and not to the test itself
+#
+# Just to make it Really HardMode™ here, we also call hackErro...File with a
+# flag that'll ensure calls to this function don't ignore existing ignores.
+# We want to avoid the case that a spec helper calls this method twice and
+# incidentally starts avoiding an arbitrary n other files on the call stack.
+#
+# Wow, this is really silly.
+quibble.ignoreCallsFromThisFile = (file = hackErrorStackToGetCallerFile(false)) ->
+  ignoredCallerFiles.push(file)
+
+quibble.reset = (hard = false) ->
   Module._load = originalLoad
   quibbles = {}
   config = quibble.config()
+  if hard
+    ignoredCallerFiles = []
+
+# private
 
 fakeLoad = (request, parent, isMain) ->
   request = absolutify(request, parent.filename)
@@ -36,14 +55,15 @@ absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFile()) ->
   return relativePath if _.startsWith(relativePath, '/') || /^\w/.test(relativePath)
   path.resolve(path.dirname(parentFileName), relativePath)
 
-hackErrorStackToGetCallerFile = ->
+hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   originalFunc = Error.prepareStackTrace
   Error.prepareStackTrace = (e, stack) -> stack
   e = new Error()
   currentFile = e.stack[0].getFileName()
   callerFile = _(e.stack).
-    select((s) -> _.startsWith(s.getFileName(), '/')).
-    find((s) -> s.getFileName() != currentFile).
-    getFileName()
+    map((s) -> s.getFileName()).
+    reject((f) -> includeGlobalIgnores && _.include(ignoredCallerFiles, f)).
+    select((f) -> _.startsWith(f, '/')).
+    find((f) -> f != currentFile)
   Error.prepareStackTrace = originalFunc
   callerFile
