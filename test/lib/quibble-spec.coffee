@@ -29,6 +29,13 @@ describe 'quibble', ->
       When -> quibble('./some-other-thing')
       Then -> require('../fixtures/a-function')() == "ha"
 
+  describe 'blowing the require cache', ->
+    context 'requiring-an-already-cached-thing and then quibbling it', ->
+      Given -> requiresAFunction = require('../fixtures/requires-a-function')
+      Given -> quibble('./..fixtures/a-function', -> 'a fake function')
+      Given -> @quibbledRequiresAFunction = require('../fixtures/requires-a-function')
+      When -> @result = @quibbledRequiresAFunction()
+      Then -> @result == "loaded a fake function"
 
 describe 'quibble.reset', ->
   describe 'restores original require', ->
