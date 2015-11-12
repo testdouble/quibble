@@ -8,7 +8,7 @@ quibbles = {}
 ignoredCallerFiles = []
 
 module.exports = quibble = (request, stub) ->
-  request = absolutify(request)
+  request = quibble.absolutify(request)
   Module._load = fakeLoad
   quibbles[request] =
     callerFile: hackErrorStackToGetCallerFile()
@@ -42,10 +42,14 @@ quibble.reset = (hard = false) ->
   if hard
     ignoredCallerFiles = []
 
+quibble.absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFile()) ->
+  return relativePath if _.startsWith(relativePath, '/') || /^\w/.test(relativePath)
+  path.resolve(path.dirname(parentFileName), relativePath)
+
 # private
 
 fakeLoad = (request, parent, isMain) ->
-  request = absolutify(request, parent.filename)
+  request = quibble.absolutify(request, parent.filename)
   if quibbles.hasOwnProperty(request)
     quibbles[request].stub
   else if requireWasCalledFromAFileThatHasQuibbledStuff()
@@ -53,10 +57,6 @@ fakeLoad = (request, parent, isMain) ->
       originalLoad(request, parent, isMain)
   else
     originalLoad(request, parent, isMain)
-
-absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFile()) ->
-  return relativePath if _.startsWith(relativePath, '/') || /^\w/.test(relativePath)
-  path.resolve(path.dirname(parentFileName), relativePath)
 
 requireWasCalledFromAFileThatHasQuibbledStuff = ->
   for q in _.values(quibbles)
