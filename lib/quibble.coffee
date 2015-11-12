@@ -7,13 +7,13 @@ config = null
 quibbles = {}
 ignoredCallerFiles = []
 
-module.exports = quibble = (request, fake) ->
-  request = absolutify(request)
+module.exports = quibble = (request, stub) ->
+  request = quibble.absolutify(request)
   Module._load = fakeLoad
-  quibbles[request] = if arguments.length < 2
-    config.defaultFakeCreator(request)
-  else
-    fake
+  quibbles[request] =
+    callerFile: hackErrorStackToGetCallerFile()
+    stub: (if arguments.length < 2 then config.defaultFakeCreator(request) else stub)
+  return quibbles[request].stub
 
 quibble.config = (userConfig) ->
   config = _.extend {},
@@ -42,18 +42,33 @@ quibble.reset = (hard = false) ->
   if hard
     ignoredCallerFiles = []
 
+quibble.absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFile()) ->
+  return relativePath if _.startsWith(relativePath, '/') || /^\w/.test(relativePath)
+  path.resolve(path.dirname(parentFileName), relativePath)
+
 # private
 
 fakeLoad = (request, parent, isMain) ->
-  request = absolutify(request, parent.filename)
+  request = quibble.absolutify(request, parent.filename)
   if quibbles.hasOwnProperty(request)
-    quibbles[request]
+    quibbles[request].stub
+  else if requireWasCalledFromAFileThatHasQuibbledStuff()
+    doWithoutCache request, parent, ->
+      originalLoad(request, parent, isMain)
   else
     originalLoad(request, parent, isMain)
 
-absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFile()) ->
-  return relativePath if _.startsWith(relativePath, '/') || /^\w/.test(relativePath)
-  path.resolve(path.dirname(parentFileName), relativePath)
+requireWasCalledFromAFileThatHasQuibbledStuff = ->
+  for q in _.values(quibbles)
+    return true if q.callerFile == hackErrorStackToGetCallerFile()
+
+doWithoutCache = (request, parent, thingToDo) ->
+  filename = Module._resolveFilename(request, parent)
+  return thingToDo() unless Module._cache.hasOwnProperty(filename)
+  cachedThing = Module._cache[filename]
+  delete Module._cache[filename]
+  _.tap thingToDo(), ->
+    Module._cache[filename] = cachedThing
 
 hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   originalFunc = Error.prepareStackTrace

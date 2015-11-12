@@ -10,6 +10,7 @@
     "start": "testem",
     "test": "mocha -u mocha-given -R $npm_package_config_mocha_reporter --compilers coffee:coffee-script --recursive test/helper.coffee test/lib/",
     "test:debug": "npm test -- --debug-brk",
+    "test:ci": "npm test && cd example && npm test",
     "preversion": "git pull --rebase && npm test",
     "postversion": "git push && git push --tags && npm publish"
   },
@@ -34,6 +35,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/testdouble/quibble.git"
+  },
+  "engines": {
+    "node": ">= 0.12.0",
+    "iojs": ">= 1.0.0"
   },
   "license": "MIT"
 }
