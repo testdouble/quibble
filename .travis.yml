@@ -1,1 +1,3 @@
 language: node_js
+after_install: cd example && npm install && cd ..
+script: npm run test:ci
