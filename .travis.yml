@@ -1,3 +1,7 @@
 language: node_js
+node_js:
+  - "4.1"
+  - "0.12"
+  - "0.10"
 after_install: cd example && npm install && cd ..
 script: npm run test:ci
