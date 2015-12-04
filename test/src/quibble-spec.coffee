@@ -1,5 +1,5 @@
 originalLoad = require('module')._load
-quibble = require('../../lib/quibble')
+quibble = require('../../src/quibble')
 
 describe 'quibble', ->
   describe 'basic behavior', ->

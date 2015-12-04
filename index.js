@@ -1,2 +1,2 @@
 require('coffee-script/register');
-module.exports = require('./lib/quibble');
+module.exports = require('./src/quibble');
