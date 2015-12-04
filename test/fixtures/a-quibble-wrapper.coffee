@@ -1,4 +1,4 @@
-quibble = require('../../lib/quibble')
+quibble = require('../../src/quibble')
 
 quibble.ignoreCallsFromThisFile()
 
