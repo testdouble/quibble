@@ -7,12 +7,14 @@
     "mocha_reporter": "dot"
   },
   "scripts": {
+    "clean": "rm -rf lib",
     "start": "testem",
     "compile": "coffee -o lib -c src",
     "test": "mocha -u mocha-given -R $npm_package_config_mocha_reporter --compilers coffee:coffee-script --recursive test/helper.coffee test/src/",
     "test:debug": "npm test -- --debug-brk",
     "test:ci": "npm test && npm run compile && cd example && npm test",
-    "preversion": "git pull --rebase && npm test",
+    "preversion": "git pull --rebase && npm test:ci",
+    "prepublish": "npm run clean && npm run compile",
     "postversion": "git push && git push --tags && npm publish"
   },
   "author": {
