@@ -65,7 +65,7 @@ between the SUT and its dependencies
 instantiating your subject (using `require` just as you normally would). The instantiation
 style of other libs is a little different (e.g. `require('./my/subject', {'/this/thing': stub})`
 3. Require strings are resolved to absolute paths. It can be a bit confusing using other tools because from the perspective of the test particular paths are knocked out _from the perspective of the subject_ and not from the test listing, which runs counter to how every other Node.js API works. Instead, here, the path of the file being knocked out is relative to whoever is knocking it out.
-4. A configurable default faker function. This lib was written with [testdouble.js](https://github.com/testdouble/testdouble.js) in mind, thinking that you'd want to default to just create a new testdouble and return it in each case by default, without having to manually create it and pass it in (for somewhat more minimal test setup)
+4. A configurable default faker function. This lib was written to support the [testdouble.js](https://github.com/testdouble/testdouble.js) feature [td.replace()](https://github.com/testdouble/testdouble.js/blob/master/docs/7-replacing-dependencies.md#nodejs), in an effort to reduce the amount of per-test friction to repetitively create & pass in test doubles
 5. A `reset()` method that undoes everything, intended to be run `afterEach` test runs
 
 
