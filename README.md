@@ -16,18 +16,24 @@ quibble = require('quibble')
 describe('pants', function(){
   var subject, legs;
   beforeEach(function(){
-    legs = quibble('./../lib/legs', function(){ return 'ooh, legs';});
+    legs = quibble('./../lib/legs', function(){ return 'a leg';});
 
     subject = require('./../lib/pants');
   });
-  // ... more test stuff
+  it('contains legs', function() {
+    expect(subject().left).toContain('a leg')
+    expect(subject().right).toContain('a leg')
+  })
 });
 ```
 
 That way, when the `subject` loaded from `lib/pants` runs `require('./legs')`,
-it will get back the function that returns 'ooh, legs'. The fake value is also
+it will get back the function that returns `'a leg'`. The fake value is also
 returned by `quibble`, which makes it easy to set and assign a test double in a
 one-liner.
+
+For more info on how this module is _really_ intended to be used, check out its
+inclusion in [testdouble.js](https://github.com/testdouble/testdouble.js/blob/master/docs/7-replacing-dependencies.md#nodejs)
 
 ## Configuration
 
