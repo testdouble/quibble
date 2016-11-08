@@ -43,7 +43,7 @@ quibble.reset = (hard = false) ->
     ignoredCallerFiles = []
 
 quibble.absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFile()) ->
-  return relativePath if _.startsWith(relativePath, '/') || /^\w/.test(relativePath)
+  return relativePath if _.startsWith(relativePath, '/') || /^(\w|@)/.test(relativePath)
   path.resolve(path.dirname(parentFileName), relativePath)
 
 # private
