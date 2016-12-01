@@ -76,7 +76,7 @@ hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   e = new Error()
   currentFile = e.stack[0].getFileName()
   callerFile = _(e.stack).invoke('getFileName').
-    reject((f) -> includeGlobalIgnores && _.include(ignoredCallerFiles, f)).
+    reject((f) -> !f || (includeGlobalIgnores && _.include(ignoredCallerFiles, f))).
     select(path.isAbsolute).
     find((f) -> f != currentFile)
   Error.prepareStackTrace = originalFunc
