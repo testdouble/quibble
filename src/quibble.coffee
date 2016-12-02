@@ -1,4 +1,16 @@
-_ = require('lodash')
+_ =
+  compact: require('lodash/compact')
+  extend: require('lodash/extend')
+  filter: require('lodash/filter')
+  find: require('lodash/find')
+  invokeMap: require('lodash/invokeMap')
+  includes: require('lodash/includes')
+  reject: require('lodash/reject')
+  startsWith: require('lodash/startsWith')
+  tap: require('lodash/tap')
+  uniq: require('lodash/uniq')
+  values: require('lodash/values')
+
 Module = require('module')
 path = require('path')
 
@@ -72,13 +84,15 @@ doWithoutCache = (request, parent, thingToDo) ->
 
 hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   originalFunc = Error.prepareStackTrace
-  Error.prepareStackTrace = (e, stack) -> stack
-  e = new Error()
-  currentFile = e.stack[0].getFileName()
-  callerFile = _(e.stack).invoke('getFileName').
-    compact().
-    reject((f) -> includeGlobalIgnores && _.include(ignoredCallerFiles, f)).
-    select(path.isAbsolute).
-    find((f) -> f != currentFile)
-  Error.prepareStackTrace = originalFunc
-  callerFile
+  try
+    Error.prepareStackTrace = (e, stack) -> stack
+    e = new Error()
+    currentFile = e.stack[0].getFileName()
+    allFileNames = _.compact(_.invokeMap(e.stack, 'getFileName'))
+    filteredFileNames = _.reject allFileNames, (f) ->
+      includeGlobalIgnores && _.includes(ignoredCallerFiles, f)
+    absoluteFileNames = _.filter(filteredFileNames, path.isAbsolute)
+    _.find(absoluteFileNames, (f) -> f != currentFile)
+  finally
+    Error.prepareStackTrace = originalFunc
+
