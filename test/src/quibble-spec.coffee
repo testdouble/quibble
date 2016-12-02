@@ -15,7 +15,7 @@ describe 'quibble', ->
       Given -> quibble.config(defaultFakeCreator: -> 'lol')
       When -> @stubbing = quibble('./lol')
       Then -> @stubbing == 'lol'
-      Then -> require('./../../test/lib/lol') == 'lol'
+      Then -> require('./lol') == 'lol'
 
   describe '.reset', ->
     context 'ensure it clears its internal data structure of quibbles', ->
