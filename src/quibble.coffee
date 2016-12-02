@@ -1,13 +1,13 @@
 _ =
-  compact: require('lodash/compact')
-  extend: require('lodash/extend')
-  filter: require('lodash/filter')
-  find: require('lodash/find')
-  invokeMap: require('lodash/invokeMap')
-  includes: require('lodash/includes')
-  reject: require('lodash/reject')
-  startsWith: require('lodash/startsWith')
-  tap: require('lodash/tap')
+  compact: require('lodash/fp/compact')
+  extendAll: require('lodash/fp/extendAll')
+  filter: require('lodash/fp/filter')
+  find: require('lodash/fp/find')
+  flow: require('lodash/fp/flow')
+  invokeMap: require('lodash/fp/invokeMap')
+  includes: require('lodash/fp/includes')
+  reject: require('lodash/fp/reject')
+  startsWith: require('lodash/fp/startsWith')
   uniq: require('lodash/uniq')
   values: require('lodash/values')
 
@@ -28,7 +28,7 @@ module.exports = quibble = (request, stub) ->
   return quibbles[request].stub
 
 quibble.config = (userConfig) ->
-  config = _.extend {},
+  config = _.extendAll {},
     defaultFakeCreator: (request) -> {}
   , userConfig
 config = quibble.config()
@@ -79,8 +79,9 @@ doWithoutCache = (request, parent, thingToDo) ->
   return thingToDo() unless Module._cache.hasOwnProperty(filename)
   cachedThing = Module._cache[filename]
   delete Module._cache[filename]
-  _.tap thingToDo(), ->
-    Module._cache[filename] = cachedThing
+  result = thingToDo()
+  Module._cache[filename] = cachedThing
+  return result
 
 hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   originalFunc = Error.prepareStackTrace
@@ -88,11 +89,13 @@ hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
     Error.prepareStackTrace = (e, stack) -> stack
     e = new Error()
     currentFile = e.stack[0].getFileName()
-    allFileNames = _.compact(_.invokeMap(e.stack, 'getFileName'))
-    filteredFileNames = _.reject allFileNames, (f) ->
-      includeGlobalIgnores && _.includes(ignoredCallerFiles, f)
-    absoluteFileNames = _.filter(filteredFileNames, path.isAbsolute)
-    _.find(absoluteFileNames, (f) -> f != currentFile)
+    _.flow([
+      _.invokeMap('getFileName'),
+      _.compact,
+      _.reject((f) -> includeGlobalIgnores && _.includes(f, ignoredCallerFiles)),
+      _.filter(path.isAbsolute),
+      _.find((f) -> f != currentFile)
+    ])(e.stack)
   finally
     Error.prepareStackTrace = originalFunc
 
