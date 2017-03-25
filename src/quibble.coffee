@@ -9,6 +9,7 @@ _ =
   reject: require('lodash/fp/reject')
   startsWith: require('lodash/fp/startsWith')
   uniq: require('lodash/uniq')
+  tap: require('lodash/tap')
   values: require('lodash/values')
 
 Module = require('module')
@@ -77,15 +78,19 @@ requireWasCalledFromAFileThatHasQuibbledStuff = ->
 doWithoutCache = (request, parent, thingToDo) ->
   filename = Module._resolveFilename(request, parent)
   if Module._cache.hasOwnProperty(filename)
-    cachedThing = Module._cache[filename]
-    delete Module._cache[filename]
-    result = thingToDo()
-    Module._cache[filename] = cachedThing
-    return result
+    doAndRestoreCache(filename, thingToDo)
   else
-    result = thingToDo()
+    doAndDeleteCache(filename, thingToDo)
+
+doAndRestoreCache = (filename, thingToDo) ->
+  cachedThing = Module._cache[filename]
+  delete Module._cache[filename]
+  _.tap thingToDo(), ->
+    Module._cache[filename] = cachedThing
+
+doAndDeleteCache = (filename, thingToDo) ->
+  _.tap thingToDo(), ->
     delete Module._cache[filename]
-    return result
 
 hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   originalFunc = Error.prepareStackTrace
