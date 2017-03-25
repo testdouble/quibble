@@ -76,12 +76,16 @@ requireWasCalledFromAFileThatHasQuibbledStuff = ->
 
 doWithoutCache = (request, parent, thingToDo) ->
   filename = Module._resolveFilename(request, parent)
-  return thingToDo() unless Module._cache.hasOwnProperty(filename)
-  cachedThing = Module._cache[filename]
-  delete Module._cache[filename]
-  result = thingToDo()
-  Module._cache[filename] = cachedThing
-  return result
+  if Module._cache.hasOwnProperty(filename)
+    cachedThing = Module._cache[filename]
+    delete Module._cache[filename]
+    result = thingToDo()
+    Module._cache[filename] = cachedThing
+    return result
+  else
+    result = thingToDo()
+    delete Module._cache[filename]
+    return result
 
 hackErrorStackToGetCallerFile = (includeGlobalIgnores = true) ->
   originalFunc = Error.prepareStackTrace
