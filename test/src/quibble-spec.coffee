@@ -18,11 +18,26 @@ describe 'quibble', ->
       Then -> require('./lol') == 'lol'
 
   describe '.reset', ->
-    context 'ensure it clears its internal data structure of quibbles', ->
-      Given -> quibble('./../fixtures/a-function', -> "ha")
-      Given -> quibble.reset()
-      When -> quibble('./some-other-thing')
-      Then -> require('../fixtures/a-function')() == "the real function"
+    it 'ensure it clears its internal data structure of quibbles', ->
+      quibble('../fixtures/a-function', -> "ha")
+      expect(require('../fixtures/requires-a-function')()).to.eq("loaded ha")
+
+      quibble.reset()
+
+      expect(require('../fixtures/a-function')()).to.eq("the real function")
+      expect(require('../fixtures/requires-a-function')()).to.eq("loaded the real function")
+
+    it 'can quibble again after reset', ->
+      quibble('../fixtures/a-function', -> "ha")
+      expect(require('../fixtures/a-function')()).to.eq("ha")
+      expect(require('../fixtures/requires-a-function')()).to.eq("loaded ha")
+
+      quibble.reset()
+
+      quibble('./some-other-thing')
+      expect(require('../fixtures/a-function')()).to.eq("the real function")
+      quibble('../fixtures/a-function', -> "ha")
+      expect(require('../fixtures/requires-a-function')()).to.eq("loaded ha")
 
     context 'without a reset', ->
       Given -> quibble('./../fixtures/a-function', -> "ha")
