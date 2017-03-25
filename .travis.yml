@@ -1,6 +1,8 @@
 language: node_js
 node_js:
-  - "4.1"
-  - "0.12"
-after_install: cd example && npm install && cd ..
-script: npm run test:ci
+  - 4
+  - 6
+  - 7
+cache: yarn
+after_install: cd example && yarn install && cd ..
+script: yarn run test:ci
