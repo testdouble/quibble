@@ -62,7 +62,7 @@ quibble.absolutify = (relativePath, parentFileName = hackErrorStackToGetCallerFi
 # private
 
 fakeLoad = (request, parent, isMain) ->
-  request = quibble.absolutify(request, parent.filename)
+  request = if parent? then quibble.absolutify(request, parent.filename) else request
   if quibbles.hasOwnProperty(request)
     quibbles[request].stub
   else if requireWasCalledFromAFileThatHasQuibbledStuff()
