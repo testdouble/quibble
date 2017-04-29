@@ -77,7 +77,7 @@ requireWasCalledFromAFileThatHasQuibbledStuff = ->
 
 doWithoutCache = (request, parent, thingToDo) ->
   filename = Module._resolveFilename(request, parent)
-  if Module._cache.hasOwnProperty(filename)
+  if Object.prototype.hasOwnProperty.call(Module._cache, filename)
     doAndRestoreCache(filename, thingToDo)
   else
     doAndDeleteCache(filename, thingToDo)
