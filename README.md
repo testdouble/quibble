@@ -4,7 +4,9 @@ Quibble is sorta like [proxyquire](https://github.com/thlorenz/proxyquire),
 [sandboxed-module](https://github.com/felixge/node-sandboxed-module) and
 [mockery](https://github.com/mfncooper/mockery). Using `quibble` you can replace
 how `require` will behave for a given path, with its intended use being almost
-solely unit testing.
+solely unit testing. It is almost-but-not-quite a private dependency of
+[testdouble.js](https://github.com/testdouble/testdouble.js), as it
+implements the `td.replace()` function's module-replacement behavior.
 
 ## Usage
 
