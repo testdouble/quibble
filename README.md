@@ -10,7 +10,7 @@ solely unit testing.
 
 Say we're testing pants:
 
-```
+```js
 quibble = require('quibble')
 
 describe('pants', function(){
@@ -43,7 +43,7 @@ Say you're pulling in [testdouble.js](https://github.com/testdouble/testdouble.j
 and you want every quibbled module to default to a single test double function with
 a name that matches its absolute path. You could do this:
 
-```
+```js
 quibble = require('quibble')
 beforeEach(function(){
   quibble.config({
