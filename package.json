@@ -11,15 +11,15 @@
     "start": "testem",
     "compile": "coffee -o lib -c src",
     "test": "mocha -u mocha-given -R $npm_package_config_mocha_reporter --compilers coffee:coffee-script --recursive test/helper.coffee test/src/",
-    "test:debug": "npm test -- --debug-brk",
-    "pretest:example": "npm run compile && cd example && npm i",
-    "test:example": "cd example && npm test",
-    "test:dependents": "npm run compile && dont-break --timeout 400",
+    "test:debug": "yarn test -- --debug-brk",
+    "pretest:example": "yarn run compile && cd example && yarn install",
+    "test:example": "cd example && yarn test",
+    "test:dependents": "yarn run compile && dont-break --timeout 400",
     "test:smells": "./test/require-smell-test.sh",
-    "test:ci": "npm test && npm run test:example && npm run test:smells && npm run test:dependents",
-    "preversion": "git pull --rebase && npm run test:ci",
-    "prepublish": "npm run clean && npm run compile",
-    "postversion": "git push && git push --tags && npm publish"
+    "test:ci": "yarn test && yarn run test:example && yarn run test:smells && yarn run test:dependents",
+    "preversion": "git pull --rebase && yarn run test:ci",
+    "prepublish": "yarn run clean && yarn run compile",
+    "postversion": "git push && git push --tags && yarn publish"
   },
   "author": {
     "name": "Justin Searls",
