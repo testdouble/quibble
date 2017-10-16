@@ -1,5 +1,7 @@
 # quibble
 
+[![Build Status](https://travis-ci.org/testdouble/quibble.svg?branch=master)](https://travis-ci.org/testdouble/quibble)
+
 Quibble is sorta like [proxyquire](https://github.com/thlorenz/proxyquire),
 [sandboxed-module](https://github.com/felixge/node-sandboxed-module) and
 [mockery](https://github.com/mfncooper/mockery). Using `quibble` you can replace
