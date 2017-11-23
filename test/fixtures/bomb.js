@@ -1,1 +1,1 @@
-throw 'a bomb';
+throw new Error('a bomb')

@@ -1,1 +1,1 @@
-module.exports = function(){ return "a real lion"; };
+module.exports = function () { return 'a real lion' }

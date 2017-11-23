@@ -1,3 +1,2 @@
-require('coffee-script/register')
-var quibble = require('../../src/quibble')
+var quibble = require('../../lib/quibble')
 quibble('./a-function', function () { return 'lol' })

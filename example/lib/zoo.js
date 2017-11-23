@@ -1,11 +1,11 @@
 var lion = require('./animals/lion'),
-    bear = require('./animals/bear');
+  bear = require('./animals/bear')
 
-module.exports = function(){
+module.exports = function () {
   return {
     animals: [
       lion(),
       bear()
     ]
-  };
-};
+  }
+}
