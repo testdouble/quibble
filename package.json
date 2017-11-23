@@ -11,7 +11,7 @@
     "test:smells": "./test/require-smell-test.sh",
     "test:ci": "yarn test && yarn run style && yarn run test:example && yarn run test:smells && yarn run test:dependents",
     "preversion": "git pull --rebase && yarn run test:ci",
-    "postversion": "git push && git push --tags && yarn publish"
+    "postversion": "git push && git push --tags && npm publish"
   },
   "author": {
     "name": "Justin Searls",
