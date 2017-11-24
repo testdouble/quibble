@@ -9,8 +9,8 @@
     "test:example": "cd example && yarn install && yarn test",
     "test:dependents": "dont-break --timeout 400",
     "test:smells": "./test/require-smell-test.sh",
-    "test:ci": "yarn test && yarn run style && yarn run test:example && yarn run test:smells && yarn run test:dependents",
-    "preversion": "git pull --rebase && yarn run test:ci",
+    "test:ci": "yarn test && yarn style && yarn test:example && yarn test:smells && yarn test:dependents",
+    "preversion": "git pull --rebase && yarn test:ci",
     "postversion": "git push && git push --tags && npm publish"
   },
   "author": {
