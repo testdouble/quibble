@@ -10,6 +10,13 @@ module.exports = {
     assert.equal(require('../../test/fixtures/a-function')(), 'kek')
     assert.equal(require('./../fixtures/b-function')(), 'b function')
   },
+  'mismatch extensions that resolve to the same thing': function () {
+    const stubbing = quibble('./../fixtures/a-function.js', function () { return 'woo' })
+
+    const result = require('../fixtures/a-function')()
+
+    assert.equal(result, 'woo')
+  },
   '.config': {
     'defaultFakeCreator': function () {
       quibble.config({defaultFakeCreator: function () { return 'lol' }})
@@ -18,8 +25,6 @@ module.exports = {
 
       assert.equal(stubbing, 'lol')
       assert.equal(require('./lol'), 'lol')
-
-      // TODO why doesn't this test reset?
     }
   },
   '.reset': {
