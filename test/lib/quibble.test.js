@@ -17,6 +17,13 @@ module.exports = {
 
     assert.equal(result, 'woo')
   },
+  'mismatch extensions where the more specific require wins': function () {
+    const stubbing = quibble('./../fixtures/a-function', function () { return 'nope' })
+    const stubbing = quibble('./../fixtures/a-function.js', function () { return 'yup' })
+
+    assert.equal(require('../fixtures/a-function')(), 'nope')
+    assert.equal(require('../fixtures/a-function.js')(), 'yup')
+  },
   '.config': {
     'defaultFakeCreator': function () {
       quibble.config({defaultFakeCreator: function () { return 'lol' }})
