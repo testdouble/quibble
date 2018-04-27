@@ -7,9 +7,8 @@
     "test": "teenytest",
     "style": "standard --fix",
     "test:example": "cd example && npm it",
-    "test:dependents": "dont-break --timeout 400",
     "test:smells": "./test/require-smell-test.sh",
-    "test:ci": "run-p test style test:example test:smells test:dependents",
+    "test:ci": "run-p test style test:example test:smells",
     "preversion": "git pull --rebase && npm run test:ci",
     "postversion": "git push && git push --tags && npm publish"
   },
@@ -24,7 +23,6 @@
   },
   "devDependencies": {
     "core-assert": "^0.2.1",
-    "dont-break": "searls/dont-break",
     "is-number": "^3.0.0",
     "npm-run-all": "^4.1.2",
     "standard": "^10.0.3",
