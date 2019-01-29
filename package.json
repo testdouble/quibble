@@ -7,8 +7,9 @@
     "test": "teenytest",
     "style": "standard --fix",
     "test:example": "cd example && npm it",
+    "test:esm-example": "cd esm-example && npm it",
     "test:smells": "./test/require-smell-test.sh",
-    "test:ci": "npm test && npm run style && npm run test:example && npm run test:smells",
+    "test:ci": "npm test && npm run style && npm run test:example && npm run test:esm-example && npm run test:smells",
     "preversion": "git pull --rebase && npm run test:ci",
     "postversion": "git push && git push --tags && npm publish"
   },
@@ -32,7 +33,8 @@
       "assert"
     ],
     "ignore": [
-      "example"
+      "example",
+      "esm-example"
     ]
   },
   "bugs": {
