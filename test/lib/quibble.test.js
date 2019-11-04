@@ -23,34 +23,34 @@ module.exports = {
 
       assert.equal(require('../fixtures/a-function')(), '!')
       assert.equal(require('../fixtures/a-function.js')(), '!')
-      assert.deepEqual(require('../fixtures/a-function.json'), {wups: 'lol'})
+      assert.deepEqual(require('../fixtures/a-function.json'), { wups: 'lol' })
     },
     'general->specific stubbing matches specific': function () {
       quibble('../fixtures/a-function', function () { return 'A' })
       quibble('../fixtures/a-function.js', function () { return 'B' })
-      quibble('../fixtures/a-function.json', {C: true})
+      quibble('../fixtures/a-function.json', { C: true })
 
       assert.equal(require('../fixtures/a-function')(), 'B')
       assert.equal(require('../fixtures/a-function.js')(), 'B')
-      assert.deepEqual(require('../fixtures/a-function.json'), {C: true})
+      assert.deepEqual(require('../fixtures/a-function.json'), { C: true })
     },
     'specific->general stubbing matches when node resolve does': function () {
       quibble('../fixtures/a-function.js', function () { return 'B' })
-      quibble('../fixtures/a-function.json', {C: true})
+      quibble('../fixtures/a-function.json', { C: true })
       quibble('../fixtures/a-function', function () { return 'A' })
 
       assert.equal(require('../fixtures/a-function')(), 'A')
       assert.equal(require('../fixtures/a-function.js')(), 'A')
-      assert.deepEqual(require('../fixtures/a-function.json'), {C: true})
+      assert.deepEqual(require('../fixtures/a-function.json'), { C: true })
     },
     'non-existant files need to be exact since resolve will ¯\\_(ツ)_/¯ ': function () {
       quibble('../fixtures/fake-file.js', function () { return 'B' })
-      quibble('../fixtures/fake-file.json', {C: true})
+      quibble('../fixtures/fake-file.json', { C: true })
       quibble('../fixtures/fake-file', function () { return 'A' })
 
       assert.equal(require('../fixtures/fake-file')(), 'A')
       assert.equal(require('../fixtures/fake-file.js')(), 'B')
-      assert.deepEqual(require('../fixtures/fake-file.json'), {C: true})
+      assert.deepEqual(require('../fixtures/fake-file.json'), { C: true })
     }
   },
   'last-in wins': function () {
@@ -72,8 +72,8 @@ module.exports = {
     assert.equal(require('../fixtures/a-function')(), 'the real function')
   },
   '.config': {
-    'defaultFakeCreator': function () {
-      quibble.config({defaultFakeCreator: function () { return 'lol' }})
+    defaultFakeCreator: function () {
+      quibble.config({ defaultFakeCreator: function () { return 'lol' } })
 
       const stubbing = quibble('./lol')
 
