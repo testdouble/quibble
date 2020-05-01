@@ -1,0 +1,12 @@
+{
+  "name": "quibble-example",
+  "private": true,
+  "scripts": {
+    "test": "mocha --loader=quibble test/helper.js --recursive test/lib/"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.1.2",
+    "quibble": "file:.."
+  }
+}

@@ -66,6 +66,69 @@ after the absolute path resolved to by `'./some/path'`.
 
 Spiffy!
 
+> Note: `defaultFakeCreator` is not supported for ES Module stubbing
+
+## ES Modules support
+
+Quibble supports ES Modules. Quibble implements ES module support using [ES Module
+Loaders](https://nodejs.org/api/esm.html#esm_experimental_loaders) which are the official way to
+"patch" Node.js' module loading mechanism for ESM.
+
+> Note that Loader support is currently experimental and unstable. We will be doing our best
+  to track the changes in the specification for the upcoming Node.js versions. Also note that
+  Quibble ESM support is tested only for versions 13 and above.
+
+To use Quibble support, you must run Node with the `quibble` package as the loader:
+
+```sh
+node --loader=quibble ...
+```
+
+Most test runners allow you to specify this in their command line, e.g. for Mocha:
+
+```sh
+mocha --loader=quibble ...
+```
+
+The `quibble` loader will enable the replacement of the ES modules with the stubs you specify, and
+without it, the stubbing will be ignored.
+
+### Restrictions on ESM
+
+* Quibble currently supports stubbing only modules that are paths (e.g. `../foo/bar.mjs`). Bare
+  specificiers (e.g. `lodash`) are not yet supported.
+* `defaultFakeCreator` is not yet supported.
+
+### `quibble` ESM API
+
+The API is similar to the CommonJS API, and uses the same `quibble` function:
+
+```js
+// a-module.mjs (ESM)
+export const life = 42;
+export default 'universe';
+
+// uses-a-module.mjs
+import universe, {life} from './a-module.mjs';
+
+console.log(life, universe);
+
+(async function () {
+  quibble('./a-module.mjs', {life: 41}, 'replacement universe');
+
+  await import('./uses-some-module.mjs');
+  // ==> logs: 41, replacement universe
+})();
+```
+
+The parameters to `quibble` for ESM modules are:
+
+1. the module path: similar to CommonJS, the path is relative to the directory you are in. It is
+   resolved the ESM way, so if you're using a relative path, you must specify the filename,
+   including the extension.
+
+* `quibble.reset` works the same as for CommonJS modules
+
 ## How's it different?
 
 A few things that stand out about quibble:
