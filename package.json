@@ -36,6 +36,7 @@
     "chai": "^4.2.0",
     "core-assert": "^1.0.0",
     "is-number": "^7.0.0",
+    "is-promise": "^4.0.0",
     "mocha": "^7.1.2",
     "standard": "^14.3.3",
     "teenytest": "^5.2.0"
