@@ -95,13 +95,11 @@ without it, the stubbing will be ignored.
 
 ### Restrictions on ESM
 
-* Quibble currently supports stubbing only modules that are paths (e.g. `../foo/bar.mjs`). Bare
-  specificiers (e.g. `lodash`) are not yet supported.
 * `defaultFakeCreator` is not yet supported.
 
 ### `quibble` ESM API
 
-The API is similar to the CommonJS API, and uses the same `quibble` function:
+The API is similar to the CommonJS API, but uses `quibble.esm` function, and is async:
 
 ```js
 // a-module.mjs (ESM)
@@ -114,7 +112,7 @@ import universe, {life} from './a-module.mjs';
 console.log(life, universe);
 
 (async function () {
-  quibble('./a-module.mjs', {life: 41}, 'replacement universe');
+  await quibble.esm('./a-module.mjs', {life: 41}, 'replacement universe');
 
   await import('./uses-some-module.mjs');
   // ==> logs: 41, replacement universe
@@ -128,6 +126,14 @@ The parameters to `quibble` for ESM modules are:
    including the extension.
 
 * `quibble.reset` works the same as for CommonJS modules
+
+ESM support also exposes the function `quibble.esmImportWithPath` which both imports a module and
+resolves the path to the module that is the package's entry point:
+
+* `async quibble.esmImportWithPath(importPath)`: imports a module, just like `import(importPath)`,
+  but returns an object with two properties:
+  * `module`: the module returned by `await import(importPath)`.
+  * `modulePath`: the full path to the module (file) that is the entry point to the package/module.
 
 ## How's it different?
 
