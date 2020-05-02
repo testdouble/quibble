@@ -14,7 +14,7 @@ describe('quibble cjs ignoreCallsFromThisFile', function () {
       life: 42
     })
 
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement',
       life: 41
     }, 'default-export-replacement')
@@ -34,7 +34,7 @@ describe('quibble cjs ignoreCallsFromThisFile', function () {
       life: 42
     })
 
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement 2',
       life: 40
     }, 'default-export-replacement 2')

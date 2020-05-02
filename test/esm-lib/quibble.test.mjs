@@ -9,7 +9,7 @@ describe('quibble esm', function () {
   afterEach(() => quibble.reset())
 
   it('should mock a module', async () => {
-    quibble('../esm-fixtures/a-module-with-function.mjs', {
+    await quibble.esm('../esm-fixtures/a-module-with-function.mjs', {
       namedExport: 'replacement',
       life: 41,
       namedFunctionExport: () => 'export replacement'
@@ -23,7 +23,7 @@ describe('quibble esm', function () {
   })
 
   it('should mock a module with no named exports', async () => {
-    quibble('../esm-fixtures/a-module.mjs', undefined, 'default-export-replacement')
+    await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'default-export-replacement')
 
     const result = await import('../esm-fixtures/a-module.mjs')
     expect(result.default).to.equal('default-export-replacement')
@@ -37,7 +37,7 @@ describe('quibble esm', function () {
       life: 42
     })
 
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement',
       life: 41
     }, 'default-export-replacement')
@@ -51,7 +51,7 @@ describe('quibble esm', function () {
   })
 
   it('should reset', async () => {
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement',
       life: 41
     }, 'default-export-replacement')
@@ -68,7 +68,7 @@ describe('quibble esm', function () {
   })
 
   it('should remock a module after reset', async () => {
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement',
       life: 41,
       namedFunctionExport: () => 'export replacement'
@@ -77,7 +77,7 @@ describe('quibble esm', function () {
     await import('../esm-fixtures/a-module.mjs')
     quibble.reset()
 
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement 2',
       life: 40
     }, 'default-export-replacement 2')

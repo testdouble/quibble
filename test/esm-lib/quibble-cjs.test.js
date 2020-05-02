@@ -1,6 +1,6 @@
-const quibble = require('../../lib/quibble.js')
 const { describe, it, afterEach } = require('mocha')
 const { expect } = require('chai')
+const quibble = require('../../lib/quibble.js')
 
 describe('quibble cjs', function () {
   afterEach(() => quibble.reset())
@@ -14,7 +14,7 @@ describe('quibble cjs', function () {
       life: 42
     })
 
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement',
       life: 41
     }, 'default-export-replacement')
@@ -34,7 +34,7 @@ describe('quibble cjs', function () {
       life: 42
     })
 
-    quibble('../esm-fixtures/a-module.mjs', {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement 2',
       life: 40
     }, 'default-export-replacement 2')
@@ -45,5 +45,14 @@ describe('quibble cjs', function () {
       namedExport: 'replacement 2',
       life: 40
     })
+  })
+
+  it('should mock bare-specifier modules', async () => {
+    await quibble.esm('is-promise', undefined, 42)
+
+    const { default: defaultExport, ...named } = await import('is-promise')
+
+    expect(defaultExport).to.equal(42)
+    expect(named).to.eql({})
   })
 })
