@@ -1,14 +1,8 @@
-import quibble from '../../lib/quibble.mjs'
-import mocha from 'mocha'
-import chai from 'chai'
+import quibble from 'quibble'
 
-const { describe, it, afterEach } = mocha
-const { expect } = chai
-
-describe('quibble esm', function () {
-  afterEach(() => quibble.reset())
-
-  it('should mock a module', async () => {
+export default {
+  afterEach: function () { quibble.reset() },
+  'mock a module': async function () {
     await quibble.esm('../esm-fixtures/a-module-with-function.mjs', {
       namedExport: 'replacement',
       life: 41,
@@ -16,22 +10,20 @@ describe('quibble esm', function () {
     }, 'default-export-replacement')
 
     const result = await import('../esm-fixtures/a-module-with-function.mjs')
-    expect(result.default).to.equal('default-export-replacement')
-    expect(result.namedExport).to.equal('replacement')
-    expect(result.life).to.equal(41)
-    expect(result.namedFunctionExport()).to.equal('export replacement')
-  })
-
-  it('should mock a module with no named exports', async () => {
+    assert.equal(result.default, 'default-export-replacement')
+    assert.equal(result.namedExport, 'replacement')
+    assert.equal(result.life, 41)
+    assert.equal(result.namedFunctionExport(), 'export replacement')
+  },
+  'mock a module with no named exports': async function () {
     await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'default-export-replacement')
 
     const result = await import('../esm-fixtures/a-module.mjs')
-    expect(result.default).to.equal('default-export-replacement')
-  })
-
-  it('should mock a module after it is used unmocked', async () => {
+    assert.equal(result.default, 'default-export-replacement')
+  },
+  'mock a module after it is used unmocked': async function () {
     const result1 = await import('../esm-fixtures/a-module.mjs')
-    expect({ ...result1 }).to.eql({
+    assert.deepEqual({ ...result1 }, {
       default: 'default-export',
       namedExport: 'named-export',
       life: 42
@@ -43,14 +35,13 @@ describe('quibble esm', function () {
     }, 'default-export-replacement')
 
     const result2 = await import('../esm-fixtures/a-module.mjs')
-    expect({ ...result2 }).to.eql({
+    assert.deepEqual({ ...result2 }, {
       default: 'default-export-replacement',
       namedExport: 'replacement',
       life: 41
     })
-  })
-
-  it('should reset', async () => {
+  },
+  reset: async function () {
     await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement',
       life: 41
@@ -60,14 +51,13 @@ describe('quibble esm', function () {
     quibble.reset()
 
     const result = await import('../esm-fixtures/a-module.mjs')
-    expect({ ...result }).to.eql({
+    assert.deepEqual({ ...result }, {
       default: 'default-export',
       namedExport: 'named-export',
       life: 42
     })
-  })
-
-  it('should remock a module after reset', async () => {
+  },
+  'remock a module after reset': async function () {
     await quibble.esm('../esm-fixtures/a-module.mjs', {
       namedExport: 'replacement',
       life: 41,
@@ -83,10 +73,10 @@ describe('quibble esm', function () {
     }, 'default-export-replacement 2')
     const result = await import('../esm-fixtures/a-module.mjs')
 
-    expect({ ...result }).to.eql({
+    assert.deepEqual({ ...result }, {
       default: 'default-export-replacement 2',
       namedExport: 'replacement 2',
       life: 40
     })
-  })
-})
+  }
+}

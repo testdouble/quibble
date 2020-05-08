@@ -14,7 +14,7 @@
   "scripts": {
     "test": "teenytest",
     "style": "standard --fix",
-    "test:esm": "if node test/supports-esm.js; then mocha --loader=quibble './test/esm-lib/*.test.mjs' './test/esm-lib/*.test.js'; fi",
+    "test:esm": "if node test/supports-esm.js; then NODE_OPTIONS=--loader=quibble ./test/esm-lib/teenytest-proxy.js './test/esm-lib/*.test.{mjs,js}'; fi",
     "test:example": "cd example && npm it",
     "test:example-esm": "if node test/supports-esm.js; then node test/supports-esm.js && cd example && npm it; fi",
     "test:smells": "./test/require-smell-test.sh",
@@ -33,11 +33,9 @@
     "teenytest-promise": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
     "core-assert": "^1.0.0",
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
-    "mocha": "^7.1.2",
     "standard": "^14.3.3",
     "teenytest": "^5.2.0"
   },

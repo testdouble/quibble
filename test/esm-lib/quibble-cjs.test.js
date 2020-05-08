@@ -1,14 +1,11 @@
-const { describe, it, afterEach } = require('mocha')
-const { expect } = require('chai')
-const quibble = require('../../lib/quibble.js')
+const quibble = require('quibble')
 
-describe('quibble cjs', function () {
-  afterEach(() => quibble.reset())
-
-  it('should work even if used from cjs', async () => {
+module.exports = {
+  afterEach: function () { quibble.reset() },
+  'used from cjs': async function () {
     const cjsImporingMjs = require('../esm-fixtures/a-module')
     const result1 = await cjsImporingMjs()
-    expect({ ...result1 }).to.eql({
+    assert.deepEqual({ ...result1 }, {
       default: 'default-export',
       namedExport: 'named-export',
       life: 42
@@ -20,7 +17,7 @@ describe('quibble cjs', function () {
     }, 'default-export-replacement')
 
     const result2 = await cjsImporingMjs()
-    expect({ ...result2 }).to.eql({
+    assert.deepEqual({ ...result2 }, {
       default: 'default-export-replacement',
       namedExport: 'replacement',
       life: 41
@@ -28,7 +25,7 @@ describe('quibble cjs', function () {
 
     quibble.reset()
     const result3 = await cjsImporingMjs()
-    expect({ ...result3 }).to.eql({
+    assert.deepEqual({ ...result3 }, {
       default: 'default-export',
       namedExport: 'named-export',
       life: 42
@@ -40,19 +37,50 @@ describe('quibble cjs', function () {
     }, 'default-export-replacement 2')
     const result4 = await cjsImporingMjs()
 
-    expect({ ...result4 }).to.eql({
+    assert.deepEqual({ ...result4 }, {
       default: 'default-export-replacement 2',
       namedExport: 'replacement 2',
       life: 40
     })
-  })
+  },
+  'ignoreCallsFromThisFile works with ESM': async function () {
+    const cjsImporingMjs = require('../esm-fixtures/a-module-ignored')
+    const result1 = await cjsImporingMjs()
+    assert.deepEqual({ ...result1 }, {
+      default: 'default-export',
+      namedExport: 'named-export',
+      life: 42
+    })
 
-  it('should mock bare-specifier modules', async () => {
-    await quibble.esm('is-promise', undefined, 42)
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
+      namedExport: 'replacement',
+      life: 41
+    }, 'default-export-replacement')
 
-    const { default: defaultExport, ...named } = await import('is-promise')
+    const result2 = await cjsImporingMjs()
+    assert.deepEqual({ ...result2 }, {
+      default: 'default-export',
+      namedExport: 'named-export',
+      life: 42
+    })
 
-    expect(defaultExport).to.equal(42)
-    expect(named).to.eql({})
-  })
-})
+    quibble.reset()
+    const result3 = await cjsImporingMjs()
+    assert.deepEqual({ ...result3 }, {
+      default: 'default-export',
+      namedExport: 'named-export',
+      life: 42
+    })
+
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
+      namedExport: 'replacement 2',
+      life: 40
+    }, 'default-export-replacement 2')
+    const result4 = await cjsImporingMjs()
+    assert.deepEqual({ ...result4 }, {
+      default: 'default-export',
+      namedExport: 'named-export',
+      life: 42
+    })
+  }
+}
