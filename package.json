@@ -37,7 +37,7 @@
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
     "standard": "^14.3.3",
-    "teenytest": "^5.2.0"
+    "teenytest": "^6.0.0"
   },
   "standard": {
     "globals": [
