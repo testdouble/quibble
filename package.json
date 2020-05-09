@@ -29,15 +29,15 @@
   },
   "dependencies": {
     "lodash": "^4.17.14",
-    "resolve": "^1.11.1",
-    "teenytest-promise": "^1.0.0"
+    "resolve": "^1.11.1"
   },
   "devDependencies": {
     "core-assert": "^1.0.0",
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
     "standard": "^14.3.3",
-    "teenytest": "^6.0.0"
+    "teenytest": "^6.0.1",
+    "teenytest-promise": "^1.0.0"
   },
   "standard": {
     "globals": [
