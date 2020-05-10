@@ -43,6 +43,15 @@ module.exports = {
       life: 40
     })
   },
+  'works for modules that dont exist': async function () {
+    await quibble.esm('../esm-fixtures/this-module-does-not-exist.mjs', { named: 'named!' }, 'def-export')
+    const result = await import('../esm-fixtures/this-module-does-not-exist.mjs')
+
+    assert.deepEqual({ ...result }, {
+      default: 'def-export',
+      named: 'named!'
+    })
+  },
   'ignoreCallsFromThisFile works with ESM': async function () {
     const cjsImporingMjs = require('../esm-fixtures/a-module-ignored')
     const result1 = await cjsImporingMjs()
