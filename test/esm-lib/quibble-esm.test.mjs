@@ -78,5 +78,11 @@ export default {
       namedExport: 'replacement 2',
       life: 40
     })
+  },
+  'mock a 3rd party lib': async function () {
+    await quibble.esm('is-promise', undefined, () => 42)
+
+    const { default: result } = await import('is-promise')
+    assert.equal(result(), 42)
   }
 }
