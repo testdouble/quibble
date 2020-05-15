@@ -84,5 +84,8 @@ export default {
 
     const { default: result } = await import('is-promise')
     assert.equal(result(), 42)
+  },
+  'isLoaderLoader returns true if loader as loaded': async function () {
+    assert.equal(quibble.isLoaderLoaded(), true)
   }
 }
