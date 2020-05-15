@@ -91,5 +91,8 @@ module.exports = {
       namedExport: 'named-export',
       life: 42
     })
+  },
+  'isLoaderLoader returns true if loader as loaded': async function () {
+    assert.equal(quibble.isLoaderLoaded(), true)
   }
 }
