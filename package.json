@@ -1,6 +1,6 @@
 {
   "name": "quibble",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Makes it easy to replace require'd dependencies.",
   "homepage": "https://github.com/testdouble/quibble",
   "main": "./index.js",
