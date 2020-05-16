@@ -1,3 +1,6 @@
+// This import is important and part of the test,
+// as it checks how quibble interacts with internal modules
+import 'fs'
 import quibble from 'quibble'
 
 export default {
@@ -8,6 +11,9 @@ export default {
       life: 41,
       namedFunctionExport: () => 'export replacement'
     }, 'default-export-replacement')
+
+    // This import is important, as it checks how quibble interacts with internal modules
+    await import('util')
 
     const result = await import('../esm-fixtures/a-module-with-function.mjs')
     assert.equal(result.default, 'default-export-replacement')
