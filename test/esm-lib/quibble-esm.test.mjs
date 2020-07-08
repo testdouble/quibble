@@ -93,5 +93,16 @@ export default {
   },
   'isLoaderLoader returns true if loader as loaded': async function () {
     assert.equal(quibble.isLoaderLoaded(), true)
+  },
+  'mock a native module': async function () {
+    await quibble.esm('fs', {
+      async readFileSync () {
+        return 42
+      }
+    })
+
+    const fs = await import('fs')
+
+    assert.equal(await fs.readFileSync(), 42)
   }
 }
