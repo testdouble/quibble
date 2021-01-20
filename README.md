@@ -134,6 +134,18 @@ resolves the path to the module that is the package's entry point:
   but returns an object with two properties:
   * `module`: the module returned by `await import(importPath)`.
   * `modulePath`: the full path to the module (file) that is the entry point to the package/module.
+  
+> Note that when mocking internal Node.js modules (e.g. "[fs](https://nodejs.org/api/fs.html)")), you need to mock the named exports both as named exports and as properties in the default export, because Node.js exports internal modules both as named exports and as a default object. Example:
+
+```js
+const fsExports = {
+  readFileSync: function (path) {
+    console.log("using quibbled readFileSyns... yay!");
+    return "Looks like 'fs' was replaced correctly.";
+  },
+}
+await quibble.esm("fs", fsExports, fsExports);
+```
 
 ## How's it different?
 
