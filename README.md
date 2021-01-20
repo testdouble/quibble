@@ -99,7 +99,7 @@ without it, the stubbing will be ignored.
 
 ### `quibble` ESM API
 
-The API is similar to the CommonJS API, but uses `quibble.esm(url, namedExports, defaultExports)` function, and is async:
+The API is similar to the CommonJS API, but uses `quibble.esm` function, and is async:
 
 ```js
 // a-module.mjs (ESM)
@@ -135,9 +135,7 @@ resolves the path to the module that is the package's entry point:
   * `module`: the module returned by `await import(importPath)`.
   * `modulePath`: the full path to the module (file) that is the entry point to the package/module.
   
-`quibble` allows mocking node's internal modules (e.g. "[fs](https://nodejs.org/docs/latest-v14.x/api/fs.html)") too.
-Note, however, that internal node modules export the same values both for named exports and default exports. When using
-`quibble`, we hence recommend mocking both as follows:
+> Note that when mocking internal Node.js modules (e.g. "[fs](https://nodejs.org/api/fs.html)")), you need to mock the named exports both as named exports and as properties in the default export, because Node.js exports internal modules both as named exports and as a default object. Example:
 
 ```js
 const fsExports = {
