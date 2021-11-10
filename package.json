@@ -36,7 +36,7 @@
     "core-assert": "^1.0.0",
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
-    "standard": "^14.3.3",
+    "standard": "^16.0.4",
     "teenytest": "^6.0.2",
     "teenytest-promise": "^1.0.0"
   },
