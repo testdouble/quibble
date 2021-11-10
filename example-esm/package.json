@@ -2,7 +2,7 @@
   "name": "quibble-example",
   "private": true,
   "scripts": {
-    "test": "mocha --loader=quibble test/helper.js --recursive test/lib/"
+    "test": "mocha --loader=quibble --experimental-json-modules test/helper.js --recursive test/lib/"
   },
   "devDependencies": {
     "chai": "^4.3.4",
