@@ -85,6 +85,16 @@ export default {
       life: 40
     })
   },
+  'mock two modules': async function () {
+    await quibble.esm('../esm-fixtures/a-module.mjs', { a: 4 }, 'a-mock')
+
+    await import('../esm-fixtures/b-module.mjs')
+
+    await quibble.esm('../esm-fixtures/b-module.mjs', { a: 4 }, 'b-mock')
+
+    assert.deepEqual((await import('../esm-fixtures/a-module.mjs')).default, 'a-mock')
+    assert.deepEqual((await import('../esm-fixtures/b-module.mjs')).default, 'b-mock')
+  },
   'mock a 3rd party lib': async function () {
     await quibble.esm('is-promise', undefined, () => 42)
 
