@@ -125,7 +125,7 @@ module.exports = {
     quibble('./some-other-thing')
     const quibbledRequiresANodeModule = require('../fixtures/requires-a-node-module')
 
-    assert.equal(quibbledRequiresANodeModule(), false);
+    assert.equal(quibbledRequiresANodeModule(), false)
   },
   afterEach: function () {
     quibble.reset()
