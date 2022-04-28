@@ -121,6 +121,12 @@ module.exports = {
       assert.equal(result, 'loaded a fake function')
     }
   },
+  'requiring-a-node-module': function () {
+    quibble('./some-other-thing')
+    const quibbledRequiresANodeModule = require('../fixtures/requires-a-node-module')
+
+    assert.equal(quibbledRequiresANodeModule(), false);
+  },
   afterEach: function () {
     quibble.reset()
   },
