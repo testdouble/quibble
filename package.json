@@ -14,7 +14,8 @@
   "scripts": {
     "test": "teenytest",
     "style": "standard --fix",
-    "test:esm": "if node test/supports-esm.js; then NODE_OPTIONS=--loader=quibble ./test/esm-lib/teenytest-proxy.js './test/esm-lib/*.test.{mjs,js}'; fi",
+    "test:esm": "NODE_OPTIONS=--loader=quibble ./test/esm-lib/teenytest-proxy.js './test/esm-lib/*.test.{mjs,js}'",
+    "win:test:esm": "cp node_modules/teenytest/bin/teenytest node_modules/teenytest/bin/teenytest.js && node --loader=quibble node_modules/teenytest/bin/teenytest.js ./test/esm-lib/*.test.{mjs,js}",
     "test:no-loader-esm": "if node test/supports-esm.js; then teenytest './test/esm-lib/*.no-loader-test.{mjs,js}'; fi",
     "test:example": "cd example && npm it",
     "test:example-esm": "if node test/supports-esm.js; then node test/supports-esm.js && cd example && npm it; fi",
