@@ -46,7 +46,8 @@
     ],
     "ignore": [
       "example",
-      "example-esm"
+      "example-esm",
+      "test/esm-fixtures"
     ]
   },
   "teenytest": {

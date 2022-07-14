@@ -116,12 +116,12 @@ export default {
     assert.equal(await fs.readFileSync(), 42)
   },
   'mocking a module does not break module cache for dependency modules': async function () {
-    const {NeverMockMeUnderPenaltyOfDeath} = await import('../esm-fixtures/a-module-never-mocked.mjs')
+    const { NeverMockMeUnderPenaltyOfDeath } = await import('../esm-fixtures/a-module-never-mocked.mjs')
 
     await quibble.esm('../esm-fixtures/a-module-with-a-dependency.mjs', {
       getString: () => 'replaced'
     })
-    
+
     const result = await import('../esm-fixtures/a-module-with-a-dependency.mjs')
     assert.equal(result.getString(), 'replaced')
 
@@ -130,5 +130,5 @@ export default {
       (await import('../esm-fixtures/a-module-never-mocked.mjs')).NeverMockMeUnderPenaltyOfDeath,
       NeverMockMeUnderPenaltyOfDeath
     )
-  },
+  }
 }

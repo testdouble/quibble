@@ -1,5 +1,5 @@
-import { NeverMockMeUnderPenaltyOfDeath } from "./a-module-never-mocked.mjs"
+import { NeverMockMeUnderPenaltyOfDeath } from './a-module-never-mocked.mjs'
 
-export function getString() {
+export function getString () {
   return 'original'
 }
