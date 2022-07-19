@@ -114,5 +114,18 @@ export default {
     const fs = await import('fs')
 
     assert.equal(await fs.readFileSync(), 42)
+  },
+  'quibble is never mocked': async function () {
+    await quibble.esm('fs', {
+      async readFileSync () {
+        return 42
+      }
+    })
+
+    await import('quibble')
+
+    const fs = await import('fs')
+
+    assert.equal(await fs.readFileSync(), 42)
   }
 }
