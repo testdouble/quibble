@@ -15,7 +15,7 @@
     "test": "teenytest",
     "style": "standard --fix",
     "test:esm": "if node test/supports-esm.js; then NODE_OPTIONS=--loader=quibble ./test/esm-lib/teenytest-proxy.js './test/esm-lib/*.test.{mjs,js}'; fi",
-    "test:no-loader-esm": "if node test/supports-esm.js; then teenytest './test/esm-lib/*.no-loader-test.{mjs,js}'; fi",
+    "test:no-loader-esm": "if node test/supports-esm.js; then teenytest './test/esm-lib/*.no-loader-test.js' && teenytest './test/esm-lib/*.no-loader-test.mjs'; fi",
     "test:example": "cd example && npm it",
     "test:example-esm": "if node test/supports-esm.js; then node test/supports-esm.js && cd example && npm it; fi",
     "test:smells": "./test/require-smell-test.sh",
