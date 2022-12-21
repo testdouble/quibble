@@ -127,5 +127,41 @@ export default {
     const fs = await import('fs')
 
     assert.equal(await fs.readFileSync(), 42)
+  },
+  'namedExport will implicitly be converted to the "default" export': async function () {
+    await quibble.esm('../esm-fixtures/a-module-with-function.mjs', {
+      default: 'default-export-replacement',
+      namedExport: 'replacement',
+      life: 41,
+      namedFunctionExport: () => 'export replacement'
+    })
+
+    // This import is important, as it checks how quibble interacts with internal modules
+    await import('util')
+
+    const result = await import('../esm-fixtures/a-module-with-function.mjs')
+    assert.equal(result.default, 'default-export-replacement')
+    assert.equal(result.namedExport, 'replacement')
+    assert.equal(result.life, 41)
+    assert.equal(result.namedFunctionExport(), 'export replacement')
+  },
+  'a "default" named export stub along with a "default" export is a conflict and thus an error':
+    async function () {
+      await assertThrows(() => quibble.esm('../esm-fixtures/a-module-with-function.mjs', {
+        default: 'default-export-replacement',
+        namedExport: 'replacement',
+        life: 41,
+        namedFunctionExport: () => 'export replacement'
+      }, 'conflict with the above named export')
+      , "conflict between a named export with the name 'default'")
+    }
+}
+
+async function assertThrows (asyncFunc, messageContained) {
+  try {
+    await asyncFunc()
+    assert.fail(`function did not throw exception with ${messageContained}`)
+  } catch (err) {
+    assert.equal(err.message.includes(messageContained), true)
   }
 }
