@@ -154,7 +154,20 @@ export default {
         namedFunctionExport: () => 'export replacement'
       }, 'conflict with the above named export')
       , "conflict between a named export with the name 'default'")
-    }
+    },
+  'ensure named exports is an object': async function () {
+    await assertThrows(() => quibble.esm('../esm-fixtures/a-module.mjs',
+      'this should be an object')
+    , 'namedExportsStub argument must be either a plain object')
+
+    await assertThrows(() => quibble.esm('../esm-fixtures/a-module.mjs',
+      ['this should be an object'])
+    , 'namedExportsStub argument must be either a plain object')
+
+    await assertThrows(() => quibble.esm('../esm-fixtures/a-module.mjs',
+      function () { 'this should be an object' })
+    , 'namedExportsStub argument must be either a plain object')
+  }
 }
 
 async function assertThrows (asyncFunc, messageContained) {
