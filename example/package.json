@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "chai": "^3.3.0",
-    "mocha": "^2.3.3",
+    "mocha": "^10.2.0",
     "quibble": "file:.."
   }
 }
