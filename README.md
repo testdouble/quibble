@@ -119,13 +119,19 @@ console.log(life, universe);
 })();
 ```
 
-The parameters to `quibble` for ESM modules are:
+The parameters to be given to `quibble.esm` for ESM modules are:
 
 1. the module path: similar to CommonJS, the path is relative to the directory you are in. It is
    resolved the ESM way, so if you're using a relative path, you must specify the filename,
    including the extension.
+2. the named export stubs: either null/undefied or an object with each property
+   having key corresponding to export names and value being the implementation
+   to use. To define the `default` export you can either define a `default`
+   property here or use the third argument, but not both at same time.
+3. the default export stub: if named export stubs does not contain a `default`
+   key, you can define the default stub with this argument.
 
-* `quibble.reset` works the same as for CommonJS modules
+Note that `quibble.reset` works the same as for CommonJS modules
 
 ESM support also exposes the function `quibble.esmImportWithPath` which both imports a module and
 resolves the path to the module that is the package's entry point:
