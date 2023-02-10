@@ -14,11 +14,11 @@
   "scripts": {
     "test": "teenytest",
     "style": "standard --fix",
-    "test:esm": "if node test/supports-esm.js; then NODE_OPTIONS=--loader=quibble ./test/esm-lib/teenytest-proxy.js './test/esm-lib/*.test.{mjs,js}'; fi",
-    "test:no-loader-esm": "if node test/supports-esm.js; then teenytest './test/esm-lib/*.no-loader-test.js' && teenytest './test/esm-lib/*.no-loader-test.mjs'; fi",
+    "test:esm": "node --loader=quibble ./test/esm-lib/teenytest-proxy.js ./test/esm-lib/*.test.{mjs,js}",
+    "test:no-loader-esm": "teenytest ./test/esm-lib/*.no-loader-test.js && teenytest ./test/esm-lib/*.no-loader-test.mjs",
     "test:example": "cd example && npm it",
-    "test:example-esm": "if node test/supports-esm.js; then node test/supports-esm.js && cd example && npm it; fi",
-    "test:smells": "./test/require-smell-test.sh",
+    "test:example-esm": "cd example && npm it",
+    "test:smells": "bash ./test/require-smell-test.sh",
     "test:ci": "npm test && npm run test:esm && npm run test:no-loader-esm && npm run style && npm run test:example && npm run test:example-esm && npm run test:smells",
     "preversion": "git pull --rebase && npm run test:ci",
     "postversion": "git push && git push --tags && npm publish"
@@ -62,8 +62,7 @@
     "url": "https://github.com/testdouble/quibble.git"
   },
   "engines": {
-    "node": ">= 0.12.0",
-    "iojs": ">= 1.0.0"
+    "node": ">= 0.14.0"
   },
   "license": "MIT"
 }
