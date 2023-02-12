@@ -30,14 +30,14 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "resolve": "^1.20.0"
+    "resolve": "^1.22.1"
   },
   "devDependencies": {
     "core-assert": "^1.0.0",
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
-    "standard": "^14.3.3",
-    "teenytest": "^6.0.2",
+    "standard": "^17.0.0",
+    "teenytest": "^6.0.4",
     "teenytest-promise": "^1.0.0"
   },
   "standard": {

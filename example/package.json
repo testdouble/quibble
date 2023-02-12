@@ -5,8 +5,8 @@
     "test": "mocha -R spec --recursive test/helper.js test/lib/"
   },
   "devDependencies": {
-    "chai": "^3.3.0",
-    "mocha": "^2.3.3",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
     "quibble": "file:.."
   }
 }
