@@ -15,11 +15,11 @@ module.exports = {
   },
   'support importing esm and returning the path for a bare specifier': async function () {
     // This test that `is-promise` is a dual-mode module where
-    // the entry points are index.js and index.mjs. If thie changes in the future, you
+    // the entry points are index.js and index.mjs. If this changes in the future, you
     // can always create a module of your own and put it in node_modules.
     const { modulePath, module } = await quibble.esmImportWithPath('is-promise')
 
-    assert.deepEqual(modulePath, require.resolve('is-promise').replace('.js', '.mjs'))
+    assert.deepEqual(modulePath, require.resolve('is-promise').replace('.js', '.mjs').replace(/\\/g, '/').replace(/^([a-zA-Z]:)/, '/$1'))
     const { default: isPromise, ...rest } = module
     assert.deepEqual(rest, {})
     assert.deepEqual(isPromise(Promise.resolve()), true)
@@ -47,7 +47,7 @@ module.exports = {
     await quibble.esm('is-promise', undefined, 42)
     const { modulePath, module } = await quibble.esmImportWithPath('is-promise')
 
-    assert.deepEqual(modulePath, require.resolve('is-promise').replace('.js', '.mjs'))
+    assert.deepEqual(modulePath, require.resolve('is-promise').replace('.js', '.mjs').replace(/\\/g, '/').replace(/^([a-zA-Z]:)/, '/$1'))
     const { default: isPromise, ...rest } = module
     assert.deepEqual(rest, {})
     assert.deepEqual(isPromise(Promise.resolve()), true)
