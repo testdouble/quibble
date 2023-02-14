@@ -167,6 +167,9 @@ export default {
     await assertThrows(() => quibble.esm('../esm-fixtures/a-module.mjs',
       function () { 'this should be an object' })
     , 'namedExportsStub argument must be either a plain object')
+
+    // Should still allow Proxy.
+    await quibble.esm('../esm-fixtures/a-module.mjs', new Proxy({}, {}))
   }
 }
 
