@@ -14,8 +14,8 @@
   "scripts": {
     "test": "teenytest",
     "style": "standard --fix",
-    "test:esm": "node --loader=quibble ./test/esm-lib/teenytest-proxy.js ./test/esm-lib/*.test.{mjs,js}",
-    "test:no-loader-esm": "teenytest ./test/esm-lib/*.no-loader-test.js && teenytest ./test/esm-lib/*.no-loader-test.mjs",
+    "test:esm": "node --loader=quibble ./test/esm-lib/teenytest-proxy.js \"./test/esm-lib/*.test.{mjs,js}\"",
+    "test:no-loader-esm": "teenytest \"./test/esm-lib/*.no-loader-test.js\" && teenytest \"./test/esm-lib/*.no-loader-test.mjs\"",
     "test:example": "cd example && npm it",
     "test:example-esm": "cd example-esm && npm it",
     "test:smells": "bash ./test/require-smell-test.sh",
