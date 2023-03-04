@@ -1,3 +1,13 @@
+# 0.6.17
+
+* Allow proxy as a default export
+  [#93](https://github.com/testdouble/quibble/pull/93)
+
+# 0.6.16
+
+* Improve Windows support
+* Update dependencies
+
 # 0.6.15
 
 * Make sure the isLoaded state is explicitly set through the NodeJS loader
