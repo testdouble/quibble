@@ -12,10 +12,13 @@ export default {
       namedFunctionExport: () => 'export replacement'
     }, 'default-export-replacement')
 
+    console.log('2')
     // This import is important, as it checks how quibble interacts with internal modules
     await import('util')
 
+    console.log('3')
     const result = await import('../esm-fixtures/a-module-with-function.mjs')
+    console.log('4')
     assert.equal(result.default, 'default-export-replacement')
     assert.equal(result.namedExport, 'replacement')
     assert.equal(result.life, 41)
