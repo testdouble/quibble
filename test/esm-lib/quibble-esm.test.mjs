@@ -12,7 +12,6 @@ export default {
       namedFunctionExport: () => 'export replacement'
     }, 'default-export-replacement')
 
-    console.log('2')
     // This import is important, as it checks how quibble interacts with internal modules
     await import('util')
 
