@@ -16,7 +16,6 @@ export default {
     await import('util')
 
     const result = await import('../esm-fixtures/a-module-with-function.mjs')
-    console.log('4')
     assert.equal(result.default, 'default-export-replacement')
     assert.equal(result.namedExport, 'replacement')
     assert.equal(result.life, 41)
