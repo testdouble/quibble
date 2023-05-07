@@ -1,12 +1,14 @@
 const path = require('path')
+const { pathToFileURL } = require('url')
 const quibble = require('quibble')
 
 module.exports = {
   afterEach: function () { quibble.reset() },
   'support importing esm and returning the path for a relative url': async function () {
-    const { modulePath, module } = await quibble.esmImportWithPath('../esm-fixtures/a-module.mjs')
+    const { modulePath, moduleUrl, module } = await quibble.esmImportWithPath('../esm-fixtures/a-module.mjs')
 
-    assert.deepEqual(modulePath, path.resolve(__dirname, '../esm-fixtures/a-module.mjs'))
+    assert.deepEqual(modulePath, pathToFileURL(path.resolve(__dirname, '../esm-fixtures/a-module.mjs')).href)
+    assert.deepEqual(moduleUrl, pathToFileURL(path.resolve(__dirname, '../esm-fixtures/a-module.mjs')).href)
     assert.deepEqual({ ...module }, {
       default: 'default-export',
       namedExport: 'named-export',
@@ -19,7 +21,7 @@ module.exports = {
     // can always create a module of your own and put it in node_modules.
     const { modulePath, module } = await quibble.esmImportWithPath('is-promise')
 
-    assert.deepEqual(modulePath, require.resolve('is-promise').replace('.js', '.mjs').replace(/\\/g, '/').replace(/^([a-zA-Z]:)/, '/$1'))
+    assert.deepEqual(modulePath, pathToFileURL(require.resolve('is-promise')).href.replace('.js', '.mjs'))
     const { default: isPromise, ...rest } = module
     assert.deepEqual(rest, {})
     assert.deepEqual(isPromise(Promise.resolve()), true)
@@ -33,7 +35,7 @@ module.exports = {
     }, 'default-export-replacement')
     const { modulePath, module } = await quibble.esmImportWithPath('../esm-fixtures/a-module.mjs')
 
-    assert.deepEqual(modulePath, path.resolve(__dirname, '../esm-fixtures/a-module.mjs'))
+    assert.deepEqual(modulePath, pathToFileURL(path.resolve(__dirname, '../esm-fixtures/a-module.mjs')).href)
     assert.deepEqual({ ...module }, {
       default: 'default-export',
       namedExport: 'named-export',
@@ -47,7 +49,7 @@ module.exports = {
     await quibble.esm('is-promise', undefined, 42)
     const { modulePath, module } = await quibble.esmImportWithPath('is-promise')
 
-    assert.deepEqual(modulePath, require.resolve('is-promise').replace('.js', '.mjs').replace(/\\/g, '/').replace(/^([a-zA-Z]:)/, '/$1'))
+    assert.deepEqual(modulePath, pathToFileURL(require.resolve('is-promise')).href.replace('.js', '.mjs'))
     const { default: isPromise, ...rest } = module
     assert.deepEqual(rest, {})
     assert.deepEqual(isPromise(Promise.resolve()), true)

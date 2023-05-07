@@ -9,7 +9,7 @@
       "require": "./lib/quibble.js",
       "import": "./lib/quibble.mjs"
     },
-    "./": "./"
+    "./package.json": "./package.json"
   },
   "scripts": {
     "test": "teenytest",
