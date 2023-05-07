@@ -1,3 +1,7 @@
+# 0.7.0
+
+Add support for Node 20. [#96](https://github.com/testdouble/quibble/pull/96)
+
 # 0.6.17
 
 * Allow proxy as a default export
