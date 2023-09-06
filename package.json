@@ -15,11 +15,13 @@
     "test": "teenytest",
     "style": "standard --fix",
     "test:esm": "node --loader=quibble ./test/esm-lib/teenytest-proxy.js \"./test/esm-lib/*.test.{mjs,js}\"",
-    "test:no-loader-esm": "teenytest \"./test/esm-lib/*.no-loader-test.js\" && teenytest \"./test/esm-lib/*.no-loader-test.mjs\"",
+    "test:esm-auto-loader": "if node test/esm-lib/supports-auto-load.js; then node ./test/esm-lib/teenytest-proxy.js \"./test/esm-lib/*.test.{mjs,js}\"; fi",
+    "test:no-loader-esm": "if ! node test/esm-lib/supports-auto-load.js; then teenytest \"./test/esm-lib/*.no-loader-test.js\" && teenytest \"./test/esm-lib/*.no-loader-test.mjs\"; fi",
     "test:example": "cd example && npm it",
     "test:example-esm": "cd example-esm && npm it",
+    "test:example-esm-auto-loader": "if node test/esm-lib/supports-auto-load.js; then cd example-esm && npm it; fi",
     "test:smells": "bash ./test/require-smell-test.sh",
-    "test:ci": "npm test && npm run test:esm && npm run test:no-loader-esm && npm run style && npm run test:example && npm run test:example-esm && npm run test:smells",
+    "test:ci": "npm test && npm run test:esm && npm run test:no-loader-esm && npm run test:esm-auto-loader && npm run style && npm run test:example && npm run test:example-esm && npm run test:example-esm-auto-loader && npm run test:smells",
     "preversion": "git pull --rebase && npm run test:ci",
     "postversion": "git push && git push --tags && npm publish"
   },
@@ -30,14 +32,14 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "resolve": "^1.22.1"
+    "resolve": "^1.22.4"
   },
   "devDependencies": {
     "core-assert": "^1.0.0",
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
-    "standard": "^17.0.0",
-    "teenytest": "^6.0.4",
+    "standard": "^17.1.0",
+    "teenytest": "^6.0.5",
     "teenytest-promise": "^1.0.0"
   },
   "standard": {
