@@ -74,11 +74,10 @@ Quibble supports ES Modules. Quibble implements ES module support using [ES Modu
 Loaders](https://nodejs.org/api/esm.html#esm_experimental_loaders) which are the official way to
 "patch" Node.js' module loading mechanism for ESM.
 
-> Note that Loader support is currently experimental and unstable. We will be doing our best
-  to track the changes in the specification for the upcoming Node.js versions. Also note that
-  Quibble ESM support is tested only for versions 13 and above.
+> Note that Loader support is currently experimental and unstable. We are doing our best
+  to track the changes in the specification for the upcoming Node.js versions.
 
-To use Quibble support, you must run Node with the `quibble` package as the loader:
+If you're running a Node.js version smaller than v20.6.0, you must run Node with the `quibble` package as a loader:
 
 ```sh
 node --loader=quibble ...
@@ -92,6 +91,9 @@ mocha --loader=quibble ...
 
 The `quibble` loader will enable the replacement of the ES modules with the stubs you specify, and
 without it, the stubbing will be ignored.
+
+For versions larger or equal to v20.6.0, there is no need to specify a `--loader`, as registering the loader
+happens automatically once you use the API.
 
 ### Restrictions on ESM
 
@@ -140,7 +142,7 @@ resolves the path to the module that is the package's entry point:
   but returns an object with two properties:
   * `module`: the module returned by `await import(importPath)`.
   * `modulePath`: the full path to the module (file) that is the entry point to the package/module.
-  
+
 > Note that when mocking internal Node.js modules (e.g. "[fs](https://nodejs.org/api/fs.html)")), you need to mock the named exports both as named exports and as properties in the default export, because Node.js exports internal modules both as named exports and as a default object. Example:
 
 ```js
