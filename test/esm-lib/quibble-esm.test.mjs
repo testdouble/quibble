@@ -2,6 +2,9 @@
 // as it checks how quibble interacts with internal modules
 import 'fs'
 import quibble from 'quibble'
+import { fileURLToPath, pathToFileURL } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
 
 export default {
   afterEach: function () { quibble.reset() },
@@ -170,6 +173,31 @@ export default {
 
     // Should still allow Proxy.
     await quibble.esm('../esm-fixtures/a-module.mjs', new Proxy({}, {}))
+  },
+  'list mocked modules': async function () {
+    await quibble.esm('../esm-fixtures/a-module-with-function.mjs', {
+      namedExport: 'replacement',
+      life: 41,
+      namedFunctionExport: () => 'export replacement'
+    }, 'default-export-replacement')
+
+    assert.deepEqual(quibble.listMockedModules(), [
+      pathToFileURL(quibble.absolutify('../esm-fixtures/a-module-with-function.mjs', __filename)).href
+    ])
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
+      namedExport: 'replacement',
+      life: 41,
+      namedFunctionExport: () => 'export replacement'
+    }, 'default-export-replacement')
+
+    assert.deepEqual(quibble.listMockedModules(), [
+      pathToFileURL(quibble.absolutify('../esm-fixtures/a-module-with-function.mjs', __filename)).href,
+      pathToFileURL(quibble.absolutify('../esm-fixtures/a-module.mjs', __filename)).href
+    ])
+
+    quibble.reset()
+
+    assert.deepEqual(quibble.listMockedModules(), [])
   }
 }
 
