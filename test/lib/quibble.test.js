@@ -1,4 +1,5 @@
 const quibble = require('../../lib/quibble')
+const { pathToFileURL } = require('url')
 
 module.exports = {
   'basic behavior': function () {
@@ -126,6 +127,24 @@ module.exports = {
     const quibbledRequiresANodeModule = require('../fixtures/requires-a-node-module')
 
     assert.equal(quibbledRequiresANodeModule(), false)
+  },
+  'list mocked modules': async function () {
+    quibble('../fixtures/a-function', function () { return 'kek' })
+
+    assert.deepEqual(quibble.listMockedModules(), [
+      pathToFileURL(quibble.absolutify('../fixtures/a-function', __filename)).href
+    ])
+
+    quibble('../fixtures/b-function', function () { return 'kek' })
+
+    assert.deepEqual(quibble.listMockedModules(), [
+      pathToFileURL(quibble.absolutify('../fixtures/a-function', __filename)).href,
+      pathToFileURL(quibble.absolutify('../fixtures/b-function', __filename)).href
+    ])
+
+    quibble.reset()
+
+    assert.deepEqual(await quibble.listMockedModules(), [])
   },
   afterEach: function () {
     quibble.reset()
