@@ -1,3 +1,11 @@
+# 0.9.2
+
+* Fix loader stomping on other loaders [#108](https://github.com/testdouble/quibble/pull/108)
+
+# …
+
+We failed to update the CHANGELOG much
+
 # 0.7.0
 
 Add support for Node 20. [#96](https://github.com/testdouble/quibble/pull/96)
