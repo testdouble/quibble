@@ -44,7 +44,7 @@ module.exports = {
   },
   'support importing esm and returning the path even when bare-specifier quibbled': async function () {
     // This test that `is-promise` is a dual-mode module where
-    // the entry points are index.js and index.mjs. If thie changes in the future, you
+    // the entry points are index.js and index.mjs. If this changes in the future, you
     // can always create a module of your own and put it in node_modules.
     await quibble.esm('is-promise', undefined, 42)
     const { modulePath, module } = await quibble.esmImportWithPath('is-promise')
