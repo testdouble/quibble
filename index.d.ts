@@ -1,3 +1,1 @@
-import quibble from './lib/quibble';
-
-export { quibble as default };
+export * from './lib/quibble.js';
