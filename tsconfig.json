@@ -1,5 +1,5 @@
 {
-  "include": ["lib/**/*.d.ts"],
+  "include": ["index.d.ts", "lib/**/*.d.ts"],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
