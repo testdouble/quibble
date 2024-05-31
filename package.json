@@ -36,14 +36,12 @@
     "resolve": "^1.22.8"
   },
   "devDependencies": {
-    "@types/node": "^20.12.13",
     "core-assert": "^1.0.0",
     "is-number": "^7.0.0",
     "is-promise": "^4.0.0",
     "standard": "^17.1.0",
     "teenytest": "^6.0.5",
-    "teenytest-promise": "^1.0.0",
-    "typescript": "^5.4.5"
+    "teenytest-promise": "^1.0.0"
   },
   "standard": {
     "globals": [
