@@ -4,10 +4,12 @@
   "description": "Makes it easy to replace require'd dependencies.",
   "homepage": "https://github.com/testdouble/quibble",
   "main": "./index.js",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
       "require": "./lib/quibble.js",
-      "import": "./lib/quibble.mjs"
+      "import": "./lib/quibble.mjs",
+      "types": "./index.d.ts"
     },
     "./package.json": "./package.json"
   },
