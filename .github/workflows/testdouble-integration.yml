@@ -1,0 +1,62 @@
+# Advisory integration check: installs this branch's quibble build into a
+# fresh checkout of testdouble.js (quibble's primary consumer) and runs
+# testdouble.js's own test suite against it. This is not a required check -
+# testdouble.js has its own independent sources of flakiness unrelated to
+# quibble - but it's the best available signal for real-world regressions,
+# including ones quibble's own test suite doesn't exercise.
+
+name: testdouble.js integration
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  testdouble:
+    continue-on-error: true
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16.x, 18.x, 20.x, 22.x, 24.x, current]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout quibble
+      uses: actions/checkout@v7
+      with:
+        path: quibble
+
+    - name: Checkout testdouble.js
+      uses: actions/checkout@v7
+      with:
+        repository: testdouble/testdouble.js
+        path: testdouble.js
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v7
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Pack quibble
+      working-directory: quibble
+      shell: bash
+      run: npm pack --pack-destination "${{ runner.temp }}"
+
+    - name: Install testdouble.js dependencies
+      working-directory: testdouble.js
+      run: npm ci
+
+    - name: Install this quibble build into testdouble.js
+      working-directory: testdouble.js
+      shell: bash
+      run: |
+        rm -rf node_modules/quibble
+        npm install --no-save "$(ls "${{ runner.temp }}"/quibble-*.tgz)"
+
+    - name: Run testdouble.js's test suite
+      working-directory: testdouble.js
+      run: npm test
