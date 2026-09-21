@@ -1,7 +1,5 @@
 # quibble
 
-[![Build Status](https://travis-ci.org/testdouble/quibble.svg?branch=main)](https://travis-ci.org/testdouble/quibble)
-
 Quibble is a terser (and more magical) alternative to packages like
 [proxyquire](https://github.com/thlorenz/proxyquire),
 [sandboxed-module](https://github.com/felixge/node-sandboxed-module) and
