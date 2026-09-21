@@ -1,16 +1,16 @@
-global.expect = require('chai').expect
-global.context = describe
-quibble = require('quibble')
+const quibble = require('quibble')
 
-beforeEach(function () {
+exports.quibble = quibble
+
+exports.setup = function () {
   // Config a default response for quibbles (usually in a spec helper)
   quibble.config({
     defaultFakeCreator: function (path) {
       return function () { return 'a fake animal' }
     }
   })
-})
+}
 
-afterEach(function () {
+exports.teardown = function () {
   quibble.reset()
-})
+}

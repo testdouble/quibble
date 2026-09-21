@@ -2,11 +2,9 @@
   "name": "quibble-example",
   "private": true,
   "scripts": {
-    "test": "mocha -R spec --recursive test/helper.js test/lib/"
+    "test": "node --test"
   },
   "devDependencies": {
-    "chai": "^4.3.7",
-    "mocha": "^10.2.0",
     "quibble": "file:.."
   }
 }
