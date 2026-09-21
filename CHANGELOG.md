@@ -1,3 +1,10 @@
+# 0.10.0
+
+* Add initial TypeScript type definitions (`index.d.ts`)
+* Add support for Node.js 22 and 24
+  * Fix ESM loader leaking a `?__quibble=N` query string on Node 22+, which could
+    cause stub substitutions to silently miss
+
 # 0.9.2
 
 * Fix loader stomping on other loaders [#108](https://github.com/testdouble/quibble/pull/108)
