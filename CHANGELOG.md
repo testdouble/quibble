@@ -1,3 +1,17 @@
+# Unreleased
+
+* Stop emitting `[DEP0205] module.register() is deprecated` on Node.js 26+
+  * On Node 26 and later, quibble now registers its ES module hooks with
+    `module.registerHooks()` (synchronous, in-thread) instead of
+    `module.register()`
+  * Earlier versions are unchanged and keep using `module.register()`. Node
+    versions from 22.15 through 22.22, 23.x, and 24.0 through 24.11 have
+    `registerHooks`, but it can't be combined with an off-thread loader (e.g.
+    `--loader`, tsx, ts-node) when ESM imports CommonJS, so quibble avoids it
+    there
+  * `canRegisterLoader()` now also returns true on a Node that only has
+    `registerHooks`
+
 # 0.10.0
 
 * Add initial TypeScript type definitions (`index.d.ts`)
