@@ -1,4 +1,4 @@
-# Unreleased
+# 0.10.1
 
 * Stop emitting `[DEP0205] module.register() is deprecated` on Node.js 26+
   * On Node 26 and later, quibble now registers its ES module hooks with
