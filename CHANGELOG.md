@@ -1,3 +1,14 @@
+# 0.11.0
+
+* Fix unbounded memory growth when mocking ES modules [#122](https://github.com/testdouble/quibble/pull/122), [#116](https://github.com/testdouble/quibble/issues/116) (see also [testdouble.js#534](https://github.com/testdouble/testdouble.js/issues/534))
+* **Behavior change:** an ES module that no mock can reach is now a single
+  instance for the life of the process, where it used to get a fresh one after
+  every mock change
+  * Module-level state in such a module (counters, caches, singletons) now
+    persists between tests
+  * Modules that are mocked, or that depend on a mock, are still re-evaluated
+    against each new mock
+
 # 0.10.1
 
 * Stop emitting `[DEP0205] module.register() is deprecated` on Node.js 26+
