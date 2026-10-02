@@ -45,6 +45,16 @@ export default {
     assert.ok(new Set(evaluations).size <= 2, `evaluated ${new Set(evaluations).size} times: ${evaluations}`)
     assert.equal(new Set(evaluations.slice(-3)).size, 1, `still changing: ${evaluations}`)
   },
+  // These fixtures are only used here, so the subject really is first loaded
+  // before any mock exists no matter what order the tests run in
+  'a module imported before any mock exists still sees a mock added later': async function () {
+    const subject = () => import('../esm-fixtures/import-graph-late-mock/subject.mjs')
+    assert.equal((await subject()).run(), 'real')
+
+    await quibble.esm('../esm-fixtures/import-graph-late-mock/leaf.mjs', { thing: () => 'fake' })
+
+    assert.equal((await subject()).run(), 'fake')
+  },
   // Separate fixtures again, so what each module has been used for before this
   // test is the same no matter what order the tests run in
   'a module that was only ever loaded as a mock stub does not hide later mocks of its dependencies': async function () {
