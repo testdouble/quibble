@@ -13,6 +13,12 @@
     },
     "./package.json": "./package.json"
   },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "test": "teenytest",
     "style": "standard --fix",
