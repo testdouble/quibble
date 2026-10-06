@@ -55,7 +55,19 @@ jobs:
       shell: bash
       run: |
         rm -rf node_modules/quibble
+        # testdouble.js's pnpm example installs testdouble.js's dependencies
+        # itself, from its package.json, so point that at this build too
+        npm pkg set dependencies.quibble="file:$(ls "${{ runner.temp }}"/quibble-*.tgz)"
         npm install --no-save "$(ls "${{ runner.temp }}"/quibble-*.tgz)"
+
+    - name: Install pnpm (for testdouble.js's pnpm example)
+      shell: bash
+      run: |
+        case "$(node -p 'process.versions.node.split(".")[0]')" in
+          16) npm install --global pnpm@8 ;;
+          18) npm install --global pnpm@9 ;;
+          *) npm install --global pnpm ;;
+        esac
 
     - name: Run testdouble.js's test suite
       working-directory: testdouble.js
