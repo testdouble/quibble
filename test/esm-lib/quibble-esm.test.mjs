@@ -30,6 +30,32 @@ export default {
     const result = await import('../esm-fixtures/a-module.mjs')
     assert.equal(result.default, 'default-export-replacement')
   },
+  'mock named exports whose names are not identifiers': async function () {
+    await quibble.esm('../esm-fixtures/a-module.mjs', {
+      'module.exports': 'module-exports-replacement',
+      'kebab-case': 'kebab-case-replacement',
+      'has "quotes" and \\backslashes\\': 'quotes-replacement'
+    }, 'default-export-replacement')
+
+    const result = await import('../esm-fixtures/a-module.mjs')
+    assert.equal(result['module.exports'], 'module-exports-replacement')
+    assert.equal(result['kebab-case'], 'kebab-case-replacement')
+    assert.equal(result['has "quotes" and \\backslashes\\'], 'quotes-replacement')
+    assert.equal(result.default, 'default-export-replacement')
+  },
+  'mock a CommonJS module with the named exports Node gives it': async function () {
+    // Node 24+ gives CommonJS modules a 'module.exports' named export, which
+    // testdouble.js's td.replaceEsm() passes along when imitating a module
+    const { default: _, ...namedExports } = await import('lodash/isPlainObject.js')
+    const namedExportStubs = Object.fromEntries(Object.keys(namedExports).map(name => [name, 'replacement']))
+    await quibble.esm('lodash/isPlainObject.js', namedExportStubs, () => 'default-export-replacement')
+
+    const result = await import('lodash/isPlainObject.js')
+    assert.equal(result.default(), 'default-export-replacement')
+    for (const name of Object.keys(namedExports)) {
+      assert.equal(result[name], 'replacement')
+    }
+  },
   'mock a module after it is used unmocked': async function () {
     const result1 = await import('../esm-fixtures/a-module.mjs')
     assert.deepEqual({ ...result1 }, {
