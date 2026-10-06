@@ -104,6 +104,34 @@ export default {
     const { default: result } = await import('is-promise')
     assert.equal(result(), 42)
   },
+  'mock a 3rd party lib that only the caller can resolve': async function () {
+    // Lives in test/esm-lib/node_modules, so it can't be resolved from quibble's
+    // own lib directory (like a dependency installed by pnpm)
+    await quibble.esm('a-dependency-of-the-tests', { namedExport: 'replacement' }, 'default-export-replacement')
+
+    const result = await import('a-dependency-of-the-tests')
+    assert.equal(result.default, 'default-export-replacement')
+    assert.equal(result.namedExport, 'replacement')
+  },
+  'mock the caller\'s copy of a 3rd party lib when quibble can resolve a different copy': async function () {
+    // test/esm-lib/node_modules/is-number shadows the real one in the root
+    // node_modules, which is the one quibble's own lib directory resolves to
+    // (like a pnpm monorepo where packages need different versions of it)
+    await quibble.esm('is-number', undefined, () => 'replacement')
+
+    const { default: isNumber } = await import('is-number')
+    assert.equal(isNumber(), 'replacement')
+  },
+  'mock a 3rd party lib that only the caller of a wrapper that ignores itself can resolve': async function () {
+    // Like testdouble.js's td.replaceEsm(): the wrapper's own directory can't
+    // resolve the specifier, so it has to be resolved from this file
+    const { default: wrappedQuibbleEsm } = await import('../esm-fixtures/a-quibble-esm-wrapper.mjs')
+    await wrappedQuibbleEsm('a-dependency-of-the-tests', { namedExport: 'replacement' }, 'default-export-replacement')
+
+    const result = await import('a-dependency-of-the-tests')
+    assert.equal(result.default, 'default-export-replacement')
+    assert.equal(result.namedExport, 'replacement')
+  },
   'isLoaderLoader returns true if loader as loaded': async function () {
     assert.equal(quibble.isLoaderLoaded(), true)
   },

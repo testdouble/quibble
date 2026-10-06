@@ -27,6 +27,17 @@ module.exports = {
     assert.deepEqual(isPromise(Promise.resolve()), true)
     assert.deepEqual(isPromise(42), false)
   },
+  'support importing esm and returning the path for a bare specifier only the caller can resolve': async function () {
+    // Lives in test/esm-lib/node_modules, so it can't be resolved from quibble's
+    // own lib directory (like a dependency installed by pnpm)
+    const { moduleUrl, module } = await quibble.esmImportWithPath('a-dependency-of-the-tests')
+
+    assert.deepEqual(moduleUrl, pathToFileURL(path.resolve(__dirname, 'node_modules/a-dependency-of-the-tests/index.js')).href)
+    assert.deepEqual({ ...module }, {
+      default: 'default-export',
+      namedExport: 'named-export'
+    })
+  },
   'support importing esm and returning the path even when relative path quibbled': async function () {
     await quibble.esm('./a-module.mjs', {
       namedExport: 'replacement',
