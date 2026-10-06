@@ -1,3 +1,10 @@
+# 0.12.1
+
+* Fix mocking an ES module with a named export whose name isn't an identifier
+  [#125](https://github.com/testdouble/quibble/pull/125)
+* Publish only the files quibble needs at runtime (`lib`, `index.js`,
+  `index.d.ts`, and `CHANGELOG.md`) [#124](https://github.com/testdouble/quibble/pull/124)
+
 # 0.12.0
 
 * Fix mocking ES modules by package name (e.g. `quibble.esm('is-number')`)
