@@ -1,3 +1,21 @@
+# 0.12.0
+
+* Fix mocking ES modules by package name (e.g. `quibble.esm('is-number')`)
+  under pnpm [#123](https://github.com/testdouble/quibble/pull/123),
+  [#84](https://github.com/testdouble/quibble/issues/84)
+  * With hoisting off, it failed with `Cannot find package 'x' imported from
+    …/quibble/lib/esm-import-functions.js`
+  * In a monorepo where packages need different versions of a dependency,
+    quibble could silently mock a different copy than the one the test imports
+* **Behavior change:** `quibble.esm()` and `quibble.esmImportWithPath()` now
+  resolve package names from the calling file (skipping files passed to
+  `ignoreCallsFromThisFile()`), as they already did for relative paths;
+  they used to resolve package names from quibble's own directory
+  * When the calling file and quibble see different copies of a package, the
+    calling file's copy is now the one mocked
+  * A package only quibble itself depends on can no longer be mocked by name
+    unless the calling file can resolve it too
+
 # 0.11.0
 
 * Fix unbounded memory growth when mocking ES modules [#122](https://github.com/testdouble/quibble/pull/122), [#116](https://github.com/testdouble/quibble/issues/116) (see also [testdouble.js#534](https://github.com/testdouble/testdouble.js/issues/534))
