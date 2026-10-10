@@ -153,6 +153,17 @@ const fsExports = {
 await quibble.esm("fs", fsExports, fsExports);
 ```
 
+## Replacing modules that don't exist
+
+Quibble does not check that the file you're replacing exists. Both `quibble()` and
+`quibble.esm()` will happily replace a relative or absolute path to a file that isn't there,
+and any later `require` or `import` of that path gets your fake. This is intentional: it lets
+you write tests against modules you haven't created yet, or that only exist in production.
+
+The downside is that a typo in the path fails silently: quibble replaces the misspelled path,
+and your subject goes on loading the real module. If a replacement doesn't seem to take effect,
+check the path first.
+
 ## How's it different?
 
 A few things that stand out about quibble:
