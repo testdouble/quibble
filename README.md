@@ -98,7 +98,8 @@ The `quibble` loader will enable the replacement of the ES modules with the stub
 without it, the stubbing will be ignored.
 
 For versions larger or equal to v20.6.0, there is no need to specify a `--loader`, as registering the loader
-happens automatically once you use the API.
+happens automatically once you use the API. This also lets quibble work alongside other loaders,
+such as TypeScript loaders like [tsx](https://tsx.is).
 
 ### Restrictions on ESM
 
