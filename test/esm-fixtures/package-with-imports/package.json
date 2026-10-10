@@ -1,0 +1,8 @@
+{
+  "name": "package-with-imports",
+  "description": "Fixture whose package.json maps #src/* imports, which only files in this package can resolve (#69)",
+  "private": true,
+  "imports": {
+    "#src/*": "./src/*"
+  }
+}

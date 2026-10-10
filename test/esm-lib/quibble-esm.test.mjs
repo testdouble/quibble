@@ -158,6 +158,33 @@ export default {
     assert.equal(result.default, 'default-export-replacement')
     assert.equal(result.namedExport, 'replacement')
   },
+  'mock a module by a package.json imports specifier (#src/...) only the caller can resolve': async function () {
+    const usesImports = await import('../esm-fixtures/package-with-imports/uses-imports.mjs')
+    await usesImports.mock({ namedExport: 'replacement' }, 'default-export-replacement')
+
+    const result = await usesImports.importModule()
+    assert.equal(result.default, 'default-export-replacement')
+    assert.equal(result.namedExport, 'replacement')
+
+    const viaPath = await import('../esm-fixtures/package-with-imports/src/a-module.mjs')
+    assert.equal(viaPath.default, 'default-export-replacement')
+  },
+  'mock a module by a package.json imports specifier through a wrapper that ignores itself': async function () {
+    const usesImports = await import('../esm-fixtures/package-with-imports/uses-imports.mjs')
+    await usesImports.mockThroughWrapper({ namedExport: 'replacement' }, 'default-export-replacement')
+
+    const result = await usesImports.importModule()
+    assert.equal(result.default, 'default-export-replacement')
+    assert.equal(result.namedExport, 'replacement')
+  },
+  'esmImportWithPath resolves a package.json imports specifier from the caller': async function () {
+    const usesImports = await import('../esm-fixtures/package-with-imports/uses-imports.mjs')
+    const { moduleUrl, module } = await usesImports.importWithPath()
+
+    assert.equal(moduleUrl, new URL('../esm-fixtures/package-with-imports/src/a-module.mjs', import.meta.url).href)
+    assert.equal(module.default, 'default-export')
+    assert.equal(module.namedExport, 'named-export')
+  },
   'isLoaderLoader returns true if loader as loaded': async function () {
     assert.equal(quibble.isLoaderLoaded(), true)
   },
