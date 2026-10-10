@@ -24,6 +24,9 @@ describe('pants', function(){
 
     subject = require('./../lib/pants');
   });
+  afterEach(function(){
+    quibble.reset();
+  });
   it('contains legs', function() {
     expect(subject().left).toContain('a leg')
     expect(subject().right).toContain('a leg')
@@ -35,6 +38,10 @@ That way, when the `subject` loaded from `lib/pants` runs `require('./legs')`,
 it will get back the function that returns `'a leg'`. The fake value is also
 returned by `quibble`, which makes it easy to set and assign a test double in a
 one-liner.
+
+Replacements stay in effect for the whole process until you call `quibble.reset()`,
+so be sure to call it after each test. Otherwise, modules loaded by later tests
+(or later test files run in the same process) may get your fakes or fail to load.
 
 For more info on how this module is _really_ intended to be used, check out its
 inclusion in [testdouble.js](https://github.com/testdouble/testdouble.js/blob/main/docs/7-replacing-dependencies.md#nodejs)
