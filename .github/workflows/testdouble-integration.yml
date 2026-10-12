@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x, 24.x, current]
+        node-version: [22.x, 24.x, current]
 
     runs-on: ubuntu-latest
 
