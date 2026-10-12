@@ -8,6 +8,7 @@ import os from 'os'
 import path from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
+const nodeMajorVersion = parseInt(process.versions.node, 10)
 
 export default {
   afterEach: function () { quibble.reset() },
@@ -175,7 +176,11 @@ export default {
     // mock nothing gets tagged, so the test would pass on the bug
     await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'unrelated')
     const { default: wrappedQuibbleEsm, url } = await import('../esm-fixtures/a-quibble-esm-wrapper-imported-under-a-mock.mjs')
-    assert.match(url, /[?&]__quibble=/)
+    // Before Node 22, a module's URL (and so its stack frames) never has the
+    // query, so there the bug can't happen and only the rest of the test runs
+    if (nodeMajorVersion >= 22) {
+      assert.match(url, /[?&]__quibble=/)
+    }
 
     // Only resolvable from this file's directory, not the wrapper's
     await wrappedQuibbleEsm('./a-module-next-to-this-test.mjs', { namedExport: 'replacement' }, 'default-export-replacement')
@@ -190,7 +195,9 @@ export default {
     // Without this mock nothing gets tagged, see the test above
     await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'unrelated')
     const { default: wrappedQuibbleEsm, absolutify, url } = await import('../esm-fixtures/a-quibble-esm-wrapper-ignored-by-url.mjs')
-    assert.match(url, /[?&]__quibble=/)
+    if (nodeMajorVersion >= 22) {
+      assert.match(url, /[?&]__quibble=/)
+    }
 
     assert.equal(absolutify('./a-module-next-to-this-test.mjs'), path.join(path.dirname(__filename), 'a-module-next-to-this-test.mjs'))
 
