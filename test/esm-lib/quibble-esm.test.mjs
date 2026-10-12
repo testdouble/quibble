@@ -56,6 +56,14 @@ export default {
       assert.equal(result[name], 'replacement')
     }
   },
+  'import() a CommonJS module that requires a quibbled module': async function () {
+    // Node's ESM loader caches a not-yet-loaded CommonJS module before
+    // requiring it, then reads the exports off that same cache entry
+    quibble('../esm-fixtures/a-cjs-dependency.cjs', 'a fake dependency')
+
+    const { default: result } = await import('../esm-fixtures/a-cjs-module-with-a-dependency.cjs')
+    assert.equal(result.dependency, 'a fake dependency')
+  },
   'mock a module after it is used unmocked': async function () {
     const result1 = await import('../esm-fixtures/a-module.mjs')
     assert.deepEqual({ ...result1 }, {

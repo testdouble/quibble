@@ -1,3 +1,12 @@
+# Unreleased
+
+* Fix CommonJS modules loaded with `import()` having empty exports after
+  `quibble()` was called from the importing file (Node 20.6–24.17 and 25.x)
+  [#111](https://github.com/testdouble/quibble/issues/111). As a side effect,
+  if a file that called `quibble()` is part of a circular `require()`, it now
+  gets the partially loaded module, as it would without quibble, instead of
+  a second copy
+
 # 0.12.1
 
 * Fix mocking an ES module with a named export whose name isn't an identifier
