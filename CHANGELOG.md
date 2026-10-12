@@ -1,14 +1,16 @@
-# Unreleased
+# 0.13.0
 
 * Fix CommonJS modules loaded with `import()` having empty exports after
   `quibble()` was called from the importing file (Node 20.6–24.17 and 25.x)
-  [#111](https://github.com/testdouble/quibble/issues/111). As a side effect,
-  if a file that called `quibble()` is part of a circular `require()`, it now
-  gets the partially loaded module, as it would without quibble, instead of
-  a second copy
-* Importing a module that doesn't exist (and isn't mocked) now fails with
-  Node's `ERR_MODULE_NOT_FOUND` instead of `ENOENT`
+  [#111](https://github.com/testdouble/quibble/issues/111)
+  * **Behavior change:** if a file that called `quibble()` is part of a
+    circular `require()`, it now gets the partially loaded module, as it would
+    without quibble, instead of a second copy
+* **Behavior change:** importing a module that doesn't exist (and isn't
+  mocked) now fails with Node's `ERR_MODULE_NOT_FOUND` instead of `ENOENT`
   [#100](https://github.com/testdouble/quibble/issues/100)
+  * Tests that check for `ENOENT` (or its message) need updating
+  * Mocking a module that doesn't exist still works
 * Fix `ignoreCallsFromThisFile()` not being honored by `quibble.esm()` and
   `quibble.esmImportWithPath()` when the ignored ES module's URL has a query,
   as it does on Node 22+ when the module was imported while a mock existed, or
