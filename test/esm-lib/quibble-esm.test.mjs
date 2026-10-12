@@ -169,6 +169,35 @@ export default {
     assert.equal(result.default, 'default-export-replacement')
     assert.equal(result.namedExport, 'replacement')
   },
+  'a wrapper that ignores itself is ignored even when its URL has a quibble query': async function () {
+    // Importing the wrapper while a mock exists tags its URL with
+    // `?__quibble=<generation>`, which has to be ignored too. Without this
+    // mock nothing gets tagged, so the test would pass on the bug
+    await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'unrelated')
+    const { default: wrappedQuibbleEsm, url } = await import('../esm-fixtures/a-quibble-esm-wrapper-imported-under-a-mock.mjs')
+    assert.match(url, /[?&]__quibble=/)
+
+    // Only resolvable from this file's directory, not the wrapper's
+    await wrappedQuibbleEsm('./a-module-next-to-this-test.mjs', { namedExport: 'replacement' }, 'default-export-replacement')
+    await wrappedQuibbleEsm('a-dependency-of-the-tests', { namedExport: 'replacement' }, 'default-export-replacement')
+
+    const relative = await import('./a-module-next-to-this-test.mjs')
+    assert.equal(relative.default, 'default-export-replacement')
+    const bare = await import('a-dependency-of-the-tests')
+    assert.equal(bare.default, 'default-export-replacement')
+  },
+  'a wrapper can ignore itself by passing its import.meta.url': async function () {
+    // Without this mock nothing gets tagged, see the test above
+    await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'unrelated')
+    const { default: wrappedQuibbleEsm, absolutify, url } = await import('../esm-fixtures/a-quibble-esm-wrapper-ignored-by-url.mjs')
+    assert.match(url, /[?&]__quibble=/)
+
+    assert.equal(absolutify('./a-module-next-to-this-test.mjs'), path.join(path.dirname(__filename), 'a-module-next-to-this-test.mjs'))
+
+    await wrappedQuibbleEsm('./a-module-next-to-this-test.mjs', { namedExport: 'replacement' }, 'default-export-replacement')
+    const result = await import('./a-module-next-to-this-test.mjs')
+    assert.equal(result.default, 'default-export-replacement')
+  },
   'mock a module by a package.json imports specifier (#src/...) only the caller can resolve': async function () {
     const usesImports = await import('../esm-fixtures/package-with-imports/uses-imports.mjs')
     await usesImports.mock({ namedExport: 'replacement' }, 'default-export-replacement')

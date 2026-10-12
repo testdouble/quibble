@@ -9,6 +9,11 @@
 * Importing a module that doesn't exist (and isn't mocked) now fails with
   Node's `ERR_MODULE_NOT_FOUND` instead of `ENOENT`
   [#100](https://github.com/testdouble/quibble/issues/100)
+* Fix `ignoreCallsFromThisFile()` not being honored by `quibble.esm()` and
+  `quibble.esmImportWithPath()` when the ignored ES module was imported while
+  a mock existed [#99](https://github.com/testdouble/quibble/issues/99)
+* `ignoreCallsFromThisFile()` now accepts a `file:` URL such as
+  `import.meta.url`
 
 # 0.12.1
 
