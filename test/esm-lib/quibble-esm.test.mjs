@@ -3,6 +3,9 @@
 import 'fs'
 import quibble from 'quibble'
 import { fileURLToPath, pathToFileURL } from 'url'
+import { mkdtemp, realpath, rm, writeFile } from 'fs/promises'
+import os from 'os'
+import path from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 
@@ -287,6 +290,42 @@ export default {
     quibble.reset()
 
     assert.deepEqual(quibble.listMockedModules(), [])
+  },
+  'importing a missing module that is not mocked rejects like Node does': async function () {
+    // Under the auto-registered loader, quibble's hooks only see imports
+    // once something is mocked
+    await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'unrelated')
+
+    await assert.rejects(import('../esm-fixtures/this-module-does-not-exist-and-is-not-mocked.mjs'), {
+      code: 'ERR_MODULE_NOT_FOUND',
+      message: /Cannot find module '.*this-module-does-not-exist-and-is-not-mocked\.mjs' imported from .*quibble-esm\.test\.mjs/
+    })
+    await assert.rejects(import('a-package-that-does-not-exist'), {
+      code: 'ERR_MODULE_NOT_FOUND',
+      message: /Cannot find package 'a-package-that-does-not-exist'/
+    })
+    await assert.rejects(import('../esm-fixtures/imports-a-missing-module.mjs'), {
+      code: 'ERR_MODULE_NOT_FOUND',
+      message: /imported from .*imports-a-missing-module\.mjs/
+    })
+  },
+  'a missing module that is created later can be imported': async function () {
+    await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'unrelated')
+    // The real path, since Node resolves symlinks (macOS's tmpdir is one)
+    const dir = await realpath(await mkdtemp(path.join(os.tmpdir(), 'quibble-')))
+    const file = path.join(dir, 'created-later.mjs')
+
+    try {
+      await assert.rejects(import(pathToFileURL(file).href), { code: 'ERR_MODULE_NOT_FOUND' })
+      await writeFile(file, "export default 'created later'")
+      // A new mock gives it a new URL, so Node doesn't hand back the failed import
+      await quibble.esm('../esm-fixtures/a-module.mjs', undefined, 'unrelated again')
+
+      const { default: result } = await import(pathToFileURL(file).href)
+      assert.equal(result, 'created later')
+    } finally {
+      await rm(dir, { recursive: true, force: true })
+    }
   }
 }
 
