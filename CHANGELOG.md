@@ -6,6 +6,9 @@
   if a file that called `quibble()` is part of a circular `require()`, it now
   gets the partially loaded module, as it would without quibble, instead of
   a second copy
+* Importing a module that doesn't exist (and isn't mocked) now fails with
+  Node's `ERR_MODULE_NOT_FOUND` instead of `ENOENT`
+  [#100](https://github.com/testdouble/quibble/issues/100)
 
 # 0.12.1
 
