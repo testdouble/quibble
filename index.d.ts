@@ -4,7 +4,7 @@ export type QuibbleConfig = {
 
 declare const quibble: ((request: string, stub?: any) => any) & {
   config(userConfig: Partial<QuibbleConfig>): QuibbleConfig;
-  ignoreCallsFromThisFile(file?: string): void;
+  ignoreCallsFromThisFile(file?: string | URL): void;
   reset(hard?: boolean): void;
   absolutify(relativePath: string, parentFileName?: string): string;
   esm(
